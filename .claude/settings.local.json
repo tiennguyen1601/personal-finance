@@ -1,0 +1,35 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(C:\\\\Users\\\\Windows\\\\.claude\\\\plugins\\\\cache\\\\claude-plugins-official\\\\superpowers\\\\5.1.0\\\\skills\\\\brainstorming\\\\scripts\\\\start-server.sh *)",
+      "Bash(bash *)",
+      "Bash(dotnet build *)",
+      "Bash(dir D:\\\\BE\\\\web-quan-li-chi-tieu\\\\backend\\\\Controllers *)",
+      "Bash(git rm *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(Get-ChildItem *)",
+      "Bash(Select-Object Name, FullName)",
+      "PowerShell(Get-ChildItem -Path \"D:\\\\BE\\\\web-quan-li-chi-tieu\\\\backend\" -Recurse -Force | Where-Object { $_.Extension -eq \".cs\" -or $_.PSIsContainer } | Select-Object FullName)",
+      "Bash(Select-Object Name)",
+      "PowerShell(Head *)",
+      "PowerShell(New-Item *)",
+      "PowerShell(Get-ChildItem -Path \"D:\\\\BE\\\\web-quan-li-chi-tieu\" -Recurse -Directory | Where-Object { $_.Name -eq \"Services\" } | Select-Object -ExpandProperty FullName)",
+      "PowerShell(dotnet run *)",
+      "Bash(npm create *)",
+      "Bash(npm install *)",
+      "Bash(npx tsc *)",
+      "Bash(Select-Object -ExpandProperty FullName)",
+      "Bash(npm run *)",
+      "Bash(Remove-Item -Recurse -Force node_modules, package-lock.json -ErrorAction SilentlyContinue)",
+      "Bash(dotnet run *)",
+      "Read(//tmp/**)",
+      "Bash(curl -s http://localhost:5178/api/categories)",
+      "Bash(curl *)",
+      "Bash(git init *)",
+      "Bash(git remote *)",
+      "Bash(git branch *)",
+      "Bash(git push *)"
+    ]
+  }
+}

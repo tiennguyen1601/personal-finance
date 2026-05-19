@@ -1,0 +1,104 @@
+<h2>Bố cục tổng thể ứng dụng</h2>
+<p class="subtitle">Web quản lý chi tiêu cá nhân — kiến trúc .NET host React</p>
+
+<div class="section">
+  <h3>Kiến trúc hệ thống</h3>
+  <div class="mockup">
+    <div class="mockup-header">Tổng quan kiến trúc</div>
+    <div class="mockup-body" style="font-family:monospace;font-size:13px;line-height:2">
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;text-align:center;padding:16px">
+        <div style="background:#e8f4fd;border:2px solid #3498db;border-radius:8px;padding:16px">
+          <div style="font-weight:bold;color:#2980b9">Browser</div>
+          <div style="font-size:12px;margin-top:8px">React (Vite build)</div>
+          <div style="font-size:11px;color:#666">HTML + JS + CSS</div>
+        </div>
+        <div style="background:#eafaf1;border:2px solid #27ae60;border-radius:8px;padding:16px">
+          <div style="font-weight:bold;color:#1e8449">.NET Web API</div>
+          <div style="font-size:12px;margin-top:8px">C# ASP.NET Core</div>
+          <div style="font-size:11px;color:#666">Serve static files + REST API</div>
+        </div>
+        <div style="background:#fef9e7;border:2px solid #f39c12;border-radius:8px;padding:16px">
+          <div style="font-weight:bold;color:#d68910">SQLite</div>
+          <div style="font-size:12px;margin-top:8px">Entity Framework Core</div>
+          <div style="font-size:11px;color:#666">File .db local</div>
+        </div>
+      </div>
+      <div style="text-align:center;color:#999;font-size:12px">Browser ←→ REST API /api/... ←→ SQLite DB</div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>Giao diện chính — 2 lựa chọn layout</h3>
+  <div class="split">
+    <div class="mockup" data-choice="sidebar" onclick="toggleSelect(this)" style="cursor:pointer">
+      <div class="mockup-header">A — Sidebar cố định</div>
+      <div class="mockup-body" style="padding:0">
+        <div style="display:flex;height:220px">
+          <div style="width:140px;background:#2c3e50;color:white;padding:12px;font-size:12px">
+            <div style="margin-bottom:12px;font-weight:bold;color:#3498db">💰 Chi Tiêu</div>
+            <div style="padding:6px;background:#34495e;border-radius:4px;margin-bottom:4px">📊 Dashboard</div>
+            <div style="padding:6px;margin-bottom:4px">💳 Giao dịch</div>
+            <div style="padding:6px;margin-bottom:4px">🏷️ Danh mục</div>
+            <div style="padding:6px;margin-bottom:4px">📈 Thống kê</div>
+            <div style="padding:6px;margin-bottom:20px">⚙️ Cài đặt</div>
+            <div style="padding:6px;color:#e74c3c">🚪 Đăng xuất</div>
+          </div>
+          <div style="flex:1;padding:12px;background:#f5f6fa">
+            <div style="font-weight:bold;margin-bottom:8px;font-size:13px">Dashboard</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+              <div style="background:white;border-radius:6px;padding:8px;font-size:11px;box-shadow:0 1px 3px rgba(0,0,0,0.1)">
+                <div style="color:#666">Tháng này</div>
+                <div style="font-weight:bold;color:#e74c3c">-2.500.000đ</div>
+              </div>
+              <div style="background:white;border-radius:6px;padding:8px;font-size:11px;box-shadow:0 1px 3px rgba(0,0,0,0.1)">
+                <div style="color:#666">Thu nhập</div>
+                <div style="font-weight:bold;color:#27ae60">+15.000.000đ</div>
+              </div>
+            </div>
+            <div style="background:white;border-radius:6px;padding:8px;font-size:11px;height:60px;box-shadow:0 1px 3px rgba(0,0,0,0.1)">
+              📊 Biểu đồ chi tiêu...
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mockup" data-choice="topnav" onclick="toggleSelect(this)" style="cursor:pointer">
+      <div class="mockup-header">B — Top navigation</div>
+      <div class="mockup-body" style="padding:0">
+        <div style="height:220px">
+          <div style="background:#2c3e50;color:white;padding:8px 12px;font-size:12px;display:flex;align-items:center;gap:16px">
+            <span style="font-weight:bold;color:#3498db">💰 Chi Tiêu</span>
+            <span style="background:#34495e;padding:4px 8px;border-radius:4px">Dashboard</span>
+            <span>Giao dịch</span>
+            <span>Danh mục</span>
+            <span>Thống kê</span>
+            <span style="margin-left:auto">👤 User</span>
+          </div>
+          <div style="padding:12px;background:#f5f6fa">
+            <div style="font-weight:bold;margin-bottom:8px;font-size:13px">Dashboard</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:8px">
+              <div style="background:white;border-radius:6px;padding:8px;font-size:11px;box-shadow:0 1px 3px rgba(0,0,0,0.1)">
+                <div style="color:#666">Tháng này</div>
+                <div style="font-weight:bold;color:#e74c3c">-2.500.000đ</div>
+              </div>
+              <div style="background:white;border-radius:6px;padding:8px;font-size:11px;box-shadow:0 1px 3px rgba(0,0,0,0.1)">
+                <div style="color:#666">Thu nhập</div>
+                <div style="font-weight:bold;color:#27ae60">+15.000.000đ</div>
+              </div>
+              <div style="background:white;border-radius:6px;padding:8px;font-size:11px;box-shadow:0 1px 3px rgba(0,0,0,0.1)">
+                <div style="color:#666">Số dư</div>
+                <div style="font-weight:bold;color:#2980b9">12.500.000đ</div>
+              </div>
+            </div>
+            <div style="background:white;border-radius:6px;padding:8px;font-size:11px;height:60px;box-shadow:0 1px 3px rgba(0,0,0,0.1)">
+              📊 Biểu đồ chi tiêu...
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <p class="subtitle" style="margin-top:12px">Click vào layout bạn thích để chọn</p>
+</div>
