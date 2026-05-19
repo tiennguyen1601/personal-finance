@@ -48,7 +48,7 @@ export default function Dashboard() {
     <div>
       <h2 style={{ margin: '0 0 24px', fontSize: 22 }}>Dashboard</h2>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, marginBottom: 32 }}>
+      <div className="dashboard-cards">
         <div style={cardStyle('#22c55e')}>
           <div style={{ color: '#64748b', fontSize: 13, marginBottom: 6 }}>Tổng thu tháng này</div>
           <div style={{ fontSize: 22, fontWeight: 700, color: '#16a34a' }}>{summary ? fmt(summary.totalIncome) : '...'}</div>
@@ -63,7 +63,7 @@ export default function Dashboard() {
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24 }}>
+      <div className="dashboard-bottom">
         <div style={{ background: 'white', borderRadius: 12, padding: 24, boxShadow: '0 1px 6px rgba(0,0,0,0.06)' }}>
           <h3 style={{ margin: '0 0 16px', fontSize: 16 }}>Chi tiêu 7 ngày qua</h3>
           <ResponsiveContainer width="100%" height={200}>

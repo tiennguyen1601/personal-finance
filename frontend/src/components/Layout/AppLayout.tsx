@@ -1,15 +1,20 @@
+import { useState } from 'react';
 import { Outlet, Navigate } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import { useAuthStore } from '../../store/authStore';
 
 export default function AppLayout() {
   const { isAuthenticated } = useAuthStore();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
   if (!isAuthenticated()) return <Navigate to="/login" replace />;
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', background: '#f1f5f9' }}>
-      <Sidebar />
-      <main style={{ flex: 1, padding: 32, overflowY: 'auto' }}>
+    <div className="app-layout">
+      <button className="hamburger" onClick={() => setSidebarOpen(true)}>☰</button>
+      <div className={`sidebar-overlay ${sidebarOpen ? 'open' : ''}`} onClick={() => setSidebarOpen(false)} />
+      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <main className="main-content">
         <Outlet />
       </main>
     </div>

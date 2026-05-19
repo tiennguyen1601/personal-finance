@@ -54,7 +54,7 @@ export default function Transactions() {
 
   return (
     <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
+      <div className="transactions-header">
         <h2 style={{ margin: 0, fontSize: 22 }}>Giao dịch</h2>
         <button onClick={() => setShowModal(true)}
           style={{ background: '#3b82f6', color: 'white', border: 'none', borderRadius: 8, padding: '10px 20px', fontWeight: 600, cursor: 'pointer' }}>
@@ -74,7 +74,8 @@ export default function Transactions() {
       </div>
 
       <div style={{ background: 'white', borderRadius: 12, boxShadow: '0 1px 6px rgba(0,0,0,0.06)', overflow: 'hidden' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+        <div className="table-wrapper">
+        <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 520 }}>
           <thead>
             <tr style={{ background: '#f8fafc', borderBottom: '1px solid #e2e8f0' }}>
               {['Ngày', 'Danh mục', 'Ghi chú', 'Loại', 'Số tiền', ''].map(h => (
@@ -112,6 +113,7 @@ export default function Transactions() {
           </tbody>
         </table>
 
+        </div>
         {totalPages > 1 && (
           <div style={{ display: 'flex', justifyContent: 'center', gap: 8, padding: 16 }}>
             {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => (

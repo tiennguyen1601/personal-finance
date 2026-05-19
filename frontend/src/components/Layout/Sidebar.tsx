@@ -8,24 +8,30 @@ const navItems = [
   { to: '/statistics', label: 'Thống kê', icon: '📈' },
 ];
 
-export default function Sidebar() {
+interface Props {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+export default function Sidebar({ isOpen, onClose }: Props) {
   const { fullName, email, logout } = useAuthStore();
   const navigate = useNavigate();
 
   const handleLogout = () => { logout(); navigate('/login'); };
 
   return (
-    <aside style={{
-      width: 220, minHeight: '100vh', background: '#1e293b', color: 'white',
-      display: 'flex', flexDirection: 'column', padding: '20px 0'
-    }}>
-      <div style={{ padding: '0 20px 24px', borderBottom: '1px solid #334155' }}>
+    <aside className={`sidebar ${isOpen ? 'open' : ''}`}>
+      <div style={{ padding: '0 20px 24px', borderBottom: '1px solid #334155', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div style={{ fontSize: 20, fontWeight: 700, color: '#38bdf8' }}>💰 Chi Tiêu</div>
+        <button onClick={onClose}
+          style={{ display: 'none', background: 'none', border: 'none', color: '#94a3b8', fontSize: 20, cursor: 'pointer', lineHeight: 1 }}
+          className="sidebar-close">✕</button>
       </div>
 
       <nav style={{ flex: 1, padding: '12px 0' }}>
         {navItems.map(item => (
           <NavLink key={item.to} to={item.to} end={item.to === '/'}
+            onClick={onClose}
             style={({ isActive }) => ({
               display: 'flex', alignItems: 'center', gap: 10,
               padding: '10px 20px', color: 'white', textDecoration: 'none',
