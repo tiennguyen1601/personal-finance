@@ -62,7 +62,7 @@ export default function Statistics() {
                   >
                     {byCategory.map((d, i) => <Cell key={i} fill={d.categoryColor} />)}
                   </Pie>
-                  <Tooltip formatter={(v: number) => fmt(v)} />
+                  <Tooltip formatter={(v: any) => fmt(v as number)} />
                 </PieChart>
               </ResponsiveContainer>
               <div style={{ marginTop: 12 }}>
@@ -84,7 +84,7 @@ export default function Statistics() {
               <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
               <XAxis dataKey="name" tick={{ fontSize: 12 }} />
               <YAxis tick={{ fontSize: 12 }} tickFormatter={v => `${(v/1000000).toFixed(0)}M`} />
-              <Tooltip formatter={(v: number) => fmt(v)} />
+              <Tooltip formatter={(v: any) => fmt(v as number)} />
               <Legend />
               <Bar dataKey="Thu nhập" fill="#22c55e" radius={[4, 4, 0, 0]} />
               <Bar dataKey="Chi tiêu" fill="#ef4444" radius={[4, 4, 0, 0]} />
