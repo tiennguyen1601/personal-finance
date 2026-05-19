@@ -1,1 +1,141 @@
-export default function Transactions() { return <div>Transactions</div>; }
+import { useEffect, useState } from 'react';
+import Modal from '../components/Common/Modal';
+import TransactionForm from '../components/Transaction/TransactionForm';
+import { transactionService } from '../services/transactionService';
+import { categoryService } from '../services/categoryService';
+import { useAppStore } from '../store/appStore';
+import type { CreateTransactionDto, Transaction } from '../types';
+
+const fmt = (n: number) => new Intl.NumberFormat('vi-VN').format(n) + 'đ';
+const PAGE_SIZE = 20;
+
+export default function Transactions() {
+  const now = new Date();
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [showModal, setShowModal] = useState(false);
+  const [editing, setEditing] = useState<Transaction | null>(null);
+  const [month, setMonth] = useState(now.getMonth() + 1);
+  const [year, setYear] = useState(now.getFullYear());
+  const [page, setPage] = useState(1);
+  const { categories, setCategories } = useAppStore();
+
+  const load = () =>
+    transactionService.getAll({ month, year }).then(setTransactions);
+
+  useEffect(() => {
+    categoryService.getAll().then(setCategories);
+  }, []);
+
+  useEffect(() => { load(); setPage(1); }, [month, year]);
+
+  const handleCreate = async (dto: CreateTransactionDto) => {
+    await transactionService.create(dto);
+    setShowModal(false);
+    load();
+  };
+
+  const handleUpdate = async (dto: CreateTransactionDto) => {
+    if (!editing) return;
+    await transactionService.update(editing.id, dto);
+    setEditing(null);
+    load();
+  };
+
+  const handleDelete = async (id: number) => {
+    if (!confirm('Xóa giao dịch này?')) return;
+    await transactionService.delete(id);
+    load();
+  };
+
+  const paged = transactions.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+  const totalPages = Math.ceil(transactions.length / PAGE_SIZE);
+  const months = Array.from({ length: 12 }, (_, i) => i + 1);
+  const years = [year - 1, year, year + 1];
+
+  return (
+    <div>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
+        <h2 style={{ margin: 0, fontSize: 22 }}>Giao dịch</h2>
+        <button onClick={() => setShowModal(true)}
+          style={{ background: '#3b82f6', color: 'white', border: 'none', borderRadius: 8, padding: '10px 20px', fontWeight: 600, cursor: 'pointer' }}>
+          + Thêm giao dịch
+        </button>
+      </div>
+
+      <div style={{ display: 'flex', gap: 12, marginBottom: 20 }}>
+        <select value={month} onChange={e => setMonth(+e.target.value)}
+          style={{ padding: '8px 12px', border: '1px solid #e2e8f0', borderRadius: 8 }}>
+          {months.map(m => <option key={m} value={m}>Tháng {m}</option>)}
+        </select>
+        <select value={year} onChange={e => setYear(+e.target.value)}
+          style={{ padding: '8px 12px', border: '1px solid #e2e8f0', borderRadius: 8 }}>
+          {years.map(y => <option key={y} value={y}>{y}</option>)}
+        </select>
+      </div>
+
+      <div style={{ background: 'white', borderRadius: 12, boxShadow: '0 1px 6px rgba(0,0,0,0.06)', overflow: 'hidden' }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+          <thead>
+            <tr style={{ background: '#f8fafc', borderBottom: '1px solid #e2e8f0' }}>
+              {['Ngày', 'Danh mục', 'Ghi chú', 'Loại', 'Số tiền', ''].map(h => (
+                <th key={h} style={{ padding: '12px 16px', textAlign: 'left', fontSize: 13, color: '#64748b', fontWeight: 600 }}>{h}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {paged.map(t => (
+              <tr key={t.id} style={{ borderBottom: '1px solid #f1f5f9' }}>
+                <td style={{ padding: '12px 16px', fontSize: 14 }}>{new Date(t.date).toLocaleDateString('vi-VN')}</td>
+                <td style={{ padding: '12px 16px', fontSize: 14 }}>
+                  <span style={{ marginRight: 6 }}>{t.categoryIcon}</span>{t.categoryName}
+                </td>
+                <td style={{ padding: '12px 16px', fontSize: 14, color: '#64748b' }}>{t.note ?? '—'}</td>
+                <td style={{ padding: '12px 16px' }}>
+                  <span style={{ fontSize: 12, padding: '3px 8px', borderRadius: 20,
+                    background: t.type === 'Income' ? '#f0fdf4' : '#fef2f2',
+                    color: t.type === 'Income' ? '#16a34a' : '#dc2626', fontWeight: 600 }}>
+                    {t.type === 'Income' ? 'Thu' : 'Chi'}
+                  </span>
+                </td>
+                <td style={{ padding: '12px 16px', fontWeight: 600, color: t.type === 'Income' ? '#16a34a' : '#dc2626' }}>
+                  {t.type === 'Income' ? '+' : '-'}{fmt(t.amount)}
+                </td>
+                <td style={{ padding: '12px 16px' }}>
+                  <button onClick={() => setEditing(t)} style={{ marginRight: 8, background: 'none', border: 'none', cursor: 'pointer', color: '#3b82f6' }}>Sửa</button>
+                  <button onClick={() => handleDelete(t.id)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#ef4444' }}>Xóa</button>
+                </td>
+              </tr>
+            ))}
+            {paged.length === 0 && (
+              <tr><td colSpan={6} style={{ padding: 32, textAlign: 'center', color: '#94a3b8' }}>Chưa có giao dịch nào</td></tr>
+            )}
+          </tbody>
+        </table>
+
+        {totalPages > 1 && (
+          <div style={{ display: 'flex', justifyContent: 'center', gap: 8, padding: 16 }}>
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => (
+              <button key={p} onClick={() => setPage(p)}
+                style={{ padding: '6px 12px', border: '1px solid', borderColor: p === page ? '#3b82f6' : '#e2e8f0',
+                  borderRadius: 6, background: p === page ? '#3b82f6' : 'white',
+                  color: p === page ? 'white' : '#374151', cursor: 'pointer' }}>
+                {p}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {showModal && (
+        <Modal title="Thêm giao dịch" onClose={() => setShowModal(false)}>
+          <TransactionForm categories={categories} onSubmit={handleCreate} onCancel={() => setShowModal(false)} />
+        </Modal>
+      )}
+      {editing && (
+        <Modal title="Sửa giao dịch" onClose={() => setEditing(null)}>
+          <TransactionForm categories={categories} initial={editing} onSubmit={handleUpdate} onCancel={() => setEditing(null)} />
+        </Modal>
+      )}
+    </div>
+  );
+}
