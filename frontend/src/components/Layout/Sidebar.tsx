@@ -6,6 +6,7 @@ const navItems = [
   { to: '/transactions', label: 'Giao dịch', icon: '💳' },
   { to: '/categories', label: 'Danh mục', icon: '🏷️' },
   { to: '/statistics', label: 'Thống kê', icon: '📈' },
+  { to: '/savings', label: 'Tiết kiệm', icon: '🐷' },
 ];
 
 interface Props {

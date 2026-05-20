@@ -57,6 +57,10 @@ export default function Dashboard() {
           <div style={{ color: '#64748b', fontSize: 13, marginBottom: 6 }}>Tổng chi tháng này</div>
           <div style={{ fontSize: 22, fontWeight: 700, color: '#dc2626' }}>{summary ? fmt(summary.totalExpense) : '...'}</div>
         </div>
+        <div style={cardStyle('#8b5cf6')}>
+          <div style={{ color: '#64748b', fontSize: 13, marginBottom: 6 }}>Đã tiết kiệm</div>
+          <div style={{ fontSize: 22, fontWeight: 700, color: '#7c3aed' }}>{summary ? fmt(summary.totalSaved) : '...'}</div>
+        </div>
         <div style={cardStyle('#3b82f6')}>
           <div style={{ color: '#64748b', fontSize: 13, marginBottom: 6 }}>Số dư</div>
           <div style={{ fontSize: 22, fontWeight: 700, color: '#2563eb' }}>{summary ? fmt(summary.balance) : '...'}</div>

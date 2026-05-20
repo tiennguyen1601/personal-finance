@@ -6,6 +6,7 @@ import Dashboard from './pages/Dashboard';
 import Transactions from './pages/Transactions';
 import Categories from './pages/Categories';
 import Statistics from './pages/Statistics';
+import Savings from './pages/Savings';
 
 export default function App() {
   return (
@@ -18,6 +19,7 @@ export default function App() {
           <Route path="/transactions" element={<Transactions />} />
           <Route path="/categories" element={<Categories />} />
           <Route path="/statistics" element={<Statistics />} />
+          <Route path="/savings" element={<Savings />} />
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
