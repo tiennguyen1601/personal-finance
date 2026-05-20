@@ -51,7 +51,34 @@ export interface CreateCategoryDto {
 export interface Summary {
   totalIncome: number;
   totalExpense: number;
+  totalSaved: number;
   balance: number;
+}
+
+export interface SavingsGoal {
+  id: number;
+  name: string;
+  icon: string;
+  color: string;
+  targetAmount: number | null;
+  deadline: string | null;
+  isDefault: boolean;
+  currentAmount: number;
+  isCompleted: boolean;
+}
+
+export interface CreateSavingsGoalDto {
+  name: string;
+  icon: string;
+  color: string;
+  targetAmount: number | null;
+  deadline: string | null;
+}
+
+export interface CreateSavingsEntryDto {
+  amount: number;
+  note?: string;
+  date: string;
 }
 
 export interface MonthlyData {
