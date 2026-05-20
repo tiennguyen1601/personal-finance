@@ -22,4 +22,18 @@ public static class DbSeeder
         db.Categories.AddRange(defaults);
         db.SaveChanges();
     }
+
+    public static void SeedDefaultSavingsGoal(AppDbContext db, int userId)
+    {
+        db.SavingsGoals.Add(new SavingsGoal
+        {
+            UserId = userId,
+            Name = "Tiết kiệm chung",
+            Icon = "🐷",
+            Color = "#8b5cf6",
+            TargetAmount = null,
+            IsDefault = true
+        });
+        db.SaveChanges();
+    }
 }

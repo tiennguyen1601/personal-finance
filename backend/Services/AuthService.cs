@@ -35,6 +35,7 @@ public class AuthService : IAuthService
         await _db.SaveChangesAsync();
 
         DbSeeder.SeedDefaultCategories(_db, user.Id);
+        DbSeeder.SeedDefaultSavingsGoal(_db, user.Id);
 
         return new AuthResponseDto
         {
