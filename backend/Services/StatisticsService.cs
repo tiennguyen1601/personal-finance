@@ -19,7 +19,12 @@ public class StatisticsService : IStatisticsService
         var income = transactions.Where(t => t.Type == TransactionType.Income).Sum(t => t.Amount);
         var expense = transactions.Where(t => t.Type == TransactionType.Expense).Sum(t => t.Amount);
 
-        return new SummaryDto { TotalIncome = income, TotalExpense = expense, Balance = income - expense };
+        var saved = await _db.SavingsEntries
+            .Include(e => e.Goal)
+            .Where(e => e.Goal.UserId == userId && e.Date.Month == month && e.Date.Year == year)
+            .SumAsync(e => e.Amount);
+
+        return new SummaryDto { TotalIncome = income, TotalExpense = expense, TotalSaved = saved, Balance = income - expense - saved };
     }
 
     public async Task<List<MonthlyDto>> GetMonthlyAsync(int userId, int year)
