@@ -1,16 +1,19 @@
 # 💰 Personal Finance — Web Quản Lý Chi Tiêu Cá Nhân
 
-Ứng dụng web quản lý chi tiêu cá nhân đa người dùng, xây dựng với **ASP.NET Core Web API** và **React + Vite**.
+Ứng dụng web quản lý chi tiêu cá nhân đa người dùng. Bản hiện tại chạy hoàn toàn trên **Firebase** (Auth + Cloud Firestore) và deploy tĩnh lên **Vercel** — không cần server riêng, dữ liệu lưu trữ vĩnh viễn trên cloud.
+
+> 📦 Thư mục `backend/` (ASP.NET Core + SQLite) là **bản cũ, giữ lại để tham khảo** và không còn dùng khi deploy. Xem mục [Kiến trúc](#kiến-trúc).
 
 ---
 
 ## Tính năng
 
-- **Đăng ký / Đăng nhập** — mỗi người dùng có tài khoản và dữ liệu riêng biệt
+- **Đăng ký / Đăng nhập** — Firebase Auth (email + mật khẩu), mỗi người dùng có dữ liệu riêng biệt
 - **Giao dịch** — thêm, sửa, xóa thu/chi; lọc theo tháng/năm
 - **Danh mục** — quản lý danh mục tùy chỉnh với icon và màu sắc
-- **Thống kê** — biểu đồ tròn theo danh mục, biểu đồ cột so sánh thu/chi theo tháng
-- **Dashboard** — tổng quan nhanh tháng hiện tại, biểu đồ 7 ngày gần nhất
+- **Tiết kiệm 🐷** — tạo quỹ mục tiêu, nạp tiền, theo dõi tiến độ
+- **Thống kê** — biểu đồ tròn theo danh mục, biểu đồ cột thu/chi theo tháng
+- **Dashboard** — tổng quan tháng hiện tại, biểu đồ chi tiêu 7 ngày gần nhất
 
 ---
 
@@ -18,224 +21,116 @@
 
 | Layer | Công nghệ |
 |-------|-----------|
-| Backend | ASP.NET Core 8 Web API (C#) |
 | Frontend | React 18 + Vite + TypeScript |
-| Database | SQLite + Entity Framework Core |
-| Auth | JWT Bearer Token |
+| Auth | Firebase Authentication (Email/Password) |
+| Database | Cloud Firestore |
 | Charts | Recharts |
 | State | Zustand |
+| Hosting | Vercel (static SPA) |
 
 ---
 
-## Yêu cầu hệ thống
+## Kiến trúc
 
-- [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8)
-- [Node.js 18+](https://nodejs.org/) (khuyến nghị 20.x)
-- [npm 9+](https://www.npmjs.com/)
+```
+frontend/ (React + Vite)  ──►  Firebase Auth   (đăng nhập)
+                          ──►  Cloud Firestore (dữ liệu)
+        │
+        └── deploy tĩnh ──► Vercel
+```
+
+**Mô hình dữ liệu Firestore** (mỗi user một nhánh riêng):
+
+```
+users/{uid}                      → { fullName, email, createdAt }
+users/{uid}/categories/{id}      → { name, icon, color, type, isDefault }
+users/{uid}/transactions/{id}    → { amount, type, categoryId, note, date, createdAt }
+users/{uid}/savingsGoals/{id}    → { name, icon, color, targetAmount, deadline, isDefault, createdAt }
+users/{uid}/savingsEntries/{id}  → { goalId, amount, note, date, createdAt }
+```
+
+- Số dư, tổng tiết kiệm, `currentAmount` của quỹ, và thông tin danh mục trên giao dịch đều được **tính / join phía client**.
+- Quy tắc bảo mật trong `firestore.rules`: mỗi user chỉ đọc/ghi được nhánh `users/{uid}` của mình.
 
 ---
 
-## Cài đặt & Chạy
+## Thiết lập Firebase (1 lần)
 
-### 1. Clone repository
+1. Vào [Firebase Console](https://console.firebase.google.com) → **Add project** → đặt tên (vd: `chi-tieu`).
+2. **Build → Authentication → Get started → Sign-in method →** bật **Email/Password**.
+3. **Build → Firestore Database → Create database →** chọn vùng (vd: `asia-southeast1`), bắt đầu ở **Production mode**.
+4. Vào tab **Rules** của Firestore, dán nội dung file [`firestore.rules`](./firestore.rules) rồi **Publish**.
+5. **Project settings (⚙) → General → Your apps →** bấm biểu tượng Web `</>` để tạo Web App, sao chép object `firebaseConfig` (apiKey, authDomain, projectId, ...).
 
-```bash
-git clone https://github.com/tiennguyen1601/personal-finance.git
-cd personal-finance
-```
+---
 
-### 2. Chạy Backend
-
-```bash
-cd backend
-dotnet restore
-dotnet run --launch-profile http
-```
-
-Backend sẽ chạy tại `http://localhost:5178`
-
-> Database SQLite (`expense_tracker.db`) sẽ tự động được tạo và migrate khi khởi động lần đầu.
-
-### 3. Chạy Frontend (chế độ Development)
-
-Mở terminal mới:
+## Chạy local
 
 ```bash
 cd frontend
 npm install
+
+# Tạo file cấu hình từ mẫu rồi điền giá trị từ firebaseConfig
+cp .env.example .env.local   # Windows PowerShell: Copy-Item .env.example .env.local
+
 npm run dev
 ```
 
-Frontend dev server chạy tại `http://localhost:5173`
+Mở `http://localhost:5173`. Các biến cần điền trong `.env.local`:
 
-> Ở chế độ dev, mọi request `/api/*` sẽ tự động proxy sang backend `localhost:5178`.
+```
+VITE_FIREBASE_API_KEY=...
+VITE_FIREBASE_AUTH_DOMAIN=...
+VITE_FIREBASE_PROJECT_ID=...
+VITE_FIREBASE_STORAGE_BUCKET=...
+VITE_FIREBASE_MESSAGING_SENDER_ID=...
+VITE_FIREBASE_APP_ID=...
+```
+
+> `.env.local` đã được `.gitignore` — không commit key lên git.
 
 ---
 
-## Build Production (chỉ cần 1 process)
+## Deploy lên Vercel
 
-```bash
-# Bước 1: Build frontend ra wwwroot
-cd frontend
-npm install
-npm run build
+1. Push code lên GitHub.
+2. Vào [vercel.com](https://vercel.com) → **Add New → Project** → import repo này.
+3. Cấu hình project:
+   - **Root Directory**: `frontend`
+   - Framework Preset: **Vite** (tự nhận diện), Build Command / Output đã có sẵn trong `frontend/vercel.json`.
+4. **Settings → Environment Variables**: thêm 6 biến `VITE_FIREBASE_*` ở trên (cho cả Production & Preview).
+5. **Deploy**. Sau khi xong, mở domain Vercel cấp.
+6. Quay lại Firebase **Authentication → Settings → Authorized domains**, thêm domain Vercel (vd: `your-app.vercel.app`) để đăng nhập hoạt động trên production.
 
-# Bước 2: Chạy backend (serve cả API + frontend)
-cd ../backend
-dotnet run --launch-profile http
-```
+Mỗi lần `git push` lên nhánh chính, Vercel tự build & deploy lại. Dữ liệu nằm trên Firestore nên **không bị mất** giữa các lần deploy.
 
-Truy cập ứng dụng tại `http://localhost:5178`
+---
+
+## Danh mục & quỹ mặc định
+
+Khi đăng ký tài khoản mới, hệ thống tự seed:
+
+**Chi tiêu:** 🍔 Ăn uống · 🚗 Di chuyển · 🎮 Giải trí · 🛍️ Mua sắm · 💊 Sức khỏe · 📄 Hóa đơn
+**Thu nhập:** 💰 Lương · 🎁 Thưởng · 📈 Đầu tư · 💡 Khác
+**Tiết kiệm:** 🐷 Tiết kiệm chung (quỹ mặc định, không xóa được)
 
 ---
 
 ## Cấu trúc thư mục
 
 ```
-personal-finance/
-├── backend/                    # ASP.NET Core Web API
-│   ├── Controllers/            # API endpoints
-│   ├── Data/                   # DbContext + DbSeeder
-│   ├── DTOs/                   # Data Transfer Objects
-│   ├── Migrations/             # EF Core migrations
-│   ├── Models/                 # Entity models
-│   ├── Services/               # Business logic
-│   ├── wwwroot/                # React build output (tự sinh khi build)
-│   ├── appsettings.json        # Cấu hình app
-│   └── Program.cs              # Entry point + DI + Middleware
+web-quan-li-chi-tieu/
+├── frontend/                   # React + Vite (phần được deploy)
+│   ├── src/
+│   │   ├── components/         # Sidebar, Modal, TransactionForm
+│   │   ├── pages/              # Dashboard, Transactions, Categories, Statistics, Savings, Login, Register
+│   │   ├── services/           # firebase.ts + các service gọi Firestore/Auth
+│   │   ├── store/              # Zustand (auth, categories)
+│   │   └── types/              # TypeScript interfaces
+│   ├── .env.example            # mẫu biến môi trường Firebase
+│   └── vercel.json             # cấu hình deploy Vercel (SPA rewrite)
 │
-├── frontend/                   # React + Vite
-│   └── src/
-│       ├── components/         # Sidebar, Modal, TransactionForm
-│       ├── pages/              # Dashboard, Transactions, Categories, Statistics
-│       ├── services/           # Axios API calls
-│       ├── store/              # Zustand state (auth, categories)
-│       └── types/              # TypeScript interfaces
-│
-└── docs/
-    └── superpowers/
-        ├── specs/              # Design specification
-        └── plans/              # Implementation plan
+├── firestore.rules             # Quy tắc bảo mật Firestore
+├── backend/                    # (LEGACY) ASP.NET Core + SQLite — không dùng khi deploy
+└── docs/superpowers/specs/     # Tài liệu thiết kế
 ```
-
----
-
-## API Endpoints
-
-Tất cả endpoints (trừ `/api/auth/*`) yêu cầu header:
-```
-Authorization: Bearer <token>
-```
-
-### Auth
-| Method | Endpoint | Mô tả |
-|--------|----------|-------|
-| POST | `/api/auth/register` | Đăng ký tài khoản mới |
-| POST | `/api/auth/login` | Đăng nhập |
-
-**Ví dụ đăng ký:**
-```json
-POST /api/auth/register
-{
-  "email": "user@example.com",
-  "password": "123456",
-  "fullName": "Nguyễn Văn A"
-}
-```
-
-**Response:**
-```json
-{
-  "token": "eyJhbGciOiJIUzI1NiIs...",
-  "fullName": "Nguyễn Văn A",
-  "email": "user@example.com"
-}
-```
-
-### Transactions
-| Method | Endpoint | Mô tả |
-|--------|----------|-------|
-| GET | `/api/transactions?month=5&year=2026` | Lấy danh sách giao dịch |
-| POST | `/api/transactions` | Thêm giao dịch mới |
-| PUT | `/api/transactions/{id}` | Cập nhật giao dịch |
-| DELETE | `/api/transactions/{id}` | Xóa giao dịch |
-
-### Categories
-| Method | Endpoint | Mô tả |
-|--------|----------|-------|
-| GET | `/api/categories` | Lấy tất cả danh mục |
-| POST | `/api/categories` | Thêm danh mục mới |
-| PUT | `/api/categories/{id}` | Cập nhật danh mục |
-| DELETE | `/api/categories/{id}` | Xóa danh mục (không xóa được mặc định) |
-
-### Statistics
-| Method | Endpoint | Mô tả |
-|--------|----------|-------|
-| GET | `/api/statistics/summary?month=5&year=2026` | Tổng thu/chi/số dư |
-| GET | `/api/statistics/monthly?year=2026` | Thu/chi theo từng tháng |
-| GET | `/api/statistics/by-category?month=5&year=2026` | Chi tiêu theo danh mục |
-
----
-
-## Hướng dẫn sử dụng
-
-### Đăng ký tài khoản
-
-1. Truy cập `http://localhost:5178` (hoặc `http://localhost:5173` khi dev)
-2. Nhấn **Đăng ký** ở trang login
-3. Nhập họ tên, email, mật khẩu (tối thiểu 6 ký tự)
-4. Sau khi đăng ký, hệ thống tự tạo **10 danh mục mặc định**
-
-### Thêm giao dịch
-
-1. Vào trang **Giao dịch** từ sidebar
-2. Nhấn **+ Thêm giao dịch**
-3. Chọn loại: Chi tiêu hoặc Thu nhập
-4. Nhập số tiền, chọn danh mục, ngày, ghi chú (tùy chọn)
-5. Nhấn **Thêm mới**
-
-### Quản lý danh mục
-
-1. Vào trang **Danh mục** từ sidebar
-2. Nhấn **+ Thêm danh mục** để tạo danh mục mới
-3. Chọn icon, màu sắc, tên và loại (Thu/Chi)
-4. Danh mục **mặc định** không thể xóa, danh mục tự tạo có thể sửa/xóa
-
-### Xem thống kê
-
-1. Vào trang **Thống kê** từ sidebar
-2. Chọn tháng/năm muốn xem
-3. **Biểu đồ tròn**: tỷ lệ chi tiêu theo từng danh mục trong tháng
-4. **Biểu đồ cột**: so sánh tổng thu và tổng chi theo 12 tháng của năm
-
----
-
-## Cấu hình
-
-Chỉnh sửa `backend/appsettings.json` nếu cần:
-
-```json
-{
-  "ConnectionStrings": {
-    "DefaultConnection": "Data Source=expense_tracker.db"
-  },
-  "Jwt": {
-    "Key": "your-super-secret-key-at-least-32-characters-long",
-    "Issuer": "ExpenseTrackerAPI",
-    "Audience": "ExpenseTrackerClient",
-    "ExpiryDays": 7
-  }
-}
-```
-
-> **Lưu ý bảo mật:** Thay `Jwt:Key` bằng chuỗi ngẫu nhiên dài ít nhất 32 ký tự trước khi deploy lên production. Không commit key thật lên git.
-
----
-
-## Danh mục mặc định
-
-Khi đăng ký tài khoản mới, hệ thống tự tạo sẵn:
-
-**Chi tiêu:** 🍔 Ăn uống · 🚗 Di chuyển · 🎮 Giải trí · 🛍️ Mua sắm · 💊 Sức khỏe · 📄 Hóa đơn
-
-**Thu nhập:** 💰 Lương · 🎁 Thưởng · 📈 Đầu tư · 💡 Khác

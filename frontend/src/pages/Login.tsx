@@ -20,7 +20,7 @@ export default function Login() {
       login(res.token, res.fullName, res.email);
       navigate('/');
     } catch (err: any) {
-      setError(err.response?.data?.message ?? 'Đăng nhập thất bại.');
+      setError(err?.message ?? 'Đăng nhập thất bại.');
     } finally {
       setLoading(false);
     }

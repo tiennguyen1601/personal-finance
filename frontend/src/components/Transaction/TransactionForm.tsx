@@ -20,7 +20,7 @@ const labelStyle: React.CSSProperties = {
 export default function TransactionForm({ categories, initial, onSubmit, onCancel }: Props) {
   const [type, setType] = useState<TransactionType>(initial?.type ?? 'Expense');
   const [amount, setAmount] = useState(initial?.amount.toString() ?? '');
-  const [categoryId, setCategoryId] = useState(initial?.categoryId.toString() ?? '');
+  const [categoryId, setCategoryId] = useState(initial?.categoryId ?? '');
   const [note, setNote] = useState(initial?.note ?? '');
   const [date, setDate] = useState(initial ? initial.date.split('T')[0] : new Date().toISOString().split('T')[0]);
   const [loading, setLoading] = useState(false);
@@ -30,7 +30,7 @@ export default function TransactionForm({ categories, initial, onSubmit, onCance
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    await onSubmit({ amount: parseFloat(amount), type, categoryId: parseInt(categoryId), note: note || undefined, date });
+    await onSubmit({ amount: parseFloat(amount), type, categoryId, note: note || undefined, date });
     setLoading(false);
   };
 

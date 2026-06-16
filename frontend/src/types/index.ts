@@ -12,7 +12,7 @@ export interface AuthResponse {
 export type TransactionType = 'Income' | 'Expense';
 
 export interface Category {
-  id: number;
+  id: string;
   name: string;
   icon: string;
   color: string;
@@ -21,13 +21,13 @@ export interface Category {
 }
 
 export interface Transaction {
-  id: number;
+  id: string;
   amount: number;
   type: TransactionType;
   note?: string;
   date: string;
   createdAt: string;
-  categoryId: number;
+  categoryId: string;
   categoryName: string;
   categoryIcon: string;
   categoryColor: string;
@@ -36,7 +36,7 @@ export interface Transaction {
 export interface CreateTransactionDto {
   amount: number;
   type: TransactionType;
-  categoryId: number;
+  categoryId: string;
   note?: string;
   date: string;
 }
@@ -56,7 +56,7 @@ export interface Summary {
 }
 
 export interface SavingsGoal {
-  id: number;
+  id: string;
   name: string;
   icon: string;
   color: string;
@@ -89,7 +89,7 @@ export interface MonthlyData {
 }
 
 export interface ByCategoryData {
-  categoryId: number;
+  categoryId: string;
   categoryName: string;
   categoryIcon: string;
   categoryColor: string;

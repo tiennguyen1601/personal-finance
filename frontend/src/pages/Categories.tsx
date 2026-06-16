@@ -45,13 +45,13 @@ export default function Categories() {
     setLoading(false);
   };
 
-  const handleDelete = async (id: number) => {
+  const handleDelete = async (id: string) => {
     if (!confirm('Xóa danh mục này?')) return;
     try {
       await categoryService.delete(id);
       await load();
     } catch (err: any) {
-      alert(err.response?.data?.message ?? 'Không thể xóa.');
+      alert(err?.message ?? 'Không thể xóa.');
     }
   };
 

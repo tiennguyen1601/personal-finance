@@ -21,7 +21,7 @@ export default function Register() {
       login(res.token, res.fullName, res.email);
       navigate('/');
     } catch (err: any) {
-      setError(err.response?.data?.message ?? 'Đăng ký thất bại.');
+      setError(err?.message ?? 'Đăng ký thất bại.');
     } finally {
       setLoading(false);
     }

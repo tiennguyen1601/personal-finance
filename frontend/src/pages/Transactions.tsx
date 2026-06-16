@@ -41,7 +41,7 @@ export default function Transactions() {
     load();
   };
 
-  const handleDelete = async (id: number) => {
+  const handleDelete = async (id: string) => {
     if (!confirm('Xóa giao dịch này?')) return;
     await transactionService.delete(id);
     load();

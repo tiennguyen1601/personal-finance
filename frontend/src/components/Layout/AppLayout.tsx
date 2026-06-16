@@ -4,8 +4,16 @@ import Sidebar from './Sidebar';
 import { useAuthStore } from '../../store/authStore';
 
 export default function AppLayout() {
-  const { isAuthenticated } = useAuthStore();
+  const { isAuthenticated, authReady } = useAuthStore();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  if (!authReady) {
+    return (
+      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#64748b' }}>
+        Đang tải...
+      </div>
+    );
+  }
 
   if (!isAuthenticated()) return <Navigate to="/login" replace />;
 
