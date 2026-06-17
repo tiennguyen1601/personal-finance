@@ -1,5 +1,6 @@
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../store/authStore';
+import { useThemeStore } from '../../store/themeStore';
 
 const navItems = [
   { to: '/', label: 'Dashboard', icon: '📊' },
@@ -9,6 +10,8 @@ const navItems = [
   { to: '/savings', label: 'Tiết kiệm', icon: '🐷' },
 ];
 
+const themeLabel: Record<string, string> = { system: '🖥️ Hệ thống', light: '☀️ Sáng', dark: '🌙 Tối' };
+
 interface Props {
   isOpen: boolean;
   onClose: () => void;
@@ -16,41 +19,37 @@ interface Props {
 
 export default function Sidebar({ isOpen, onClose }: Props) {
   const { fullName, email, logout } = useAuthStore();
+  const { theme, cycleTheme } = useThemeStore();
   const navigate = useNavigate();
 
   const handleLogout = () => { logout(); navigate('/login'); };
 
   return (
     <aside className={`sidebar ${isOpen ? 'open' : ''}`}>
-      <div style={{ padding: '0 20px 24px', borderBottom: '1px solid #334155', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <div style={{ fontSize: 20, fontWeight: 700, color: '#38bdf8' }}>💰 Chi Tiêu</div>
+      <div style={{ padding: '0 20px 20px', borderBottom: '1px solid var(--glass-border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div style={{ fontSize: 20, fontWeight: 700, background: 'var(--accent-grad)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>💰 Chi Tiêu</div>
         <button onClick={onClose}
-          style={{ display: 'none', background: 'none', border: 'none', color: '#94a3b8', fontSize: 20, cursor: 'pointer', lineHeight: 1 }}
+          style={{ display: 'none', background: 'none', border: 'none', color: 'var(--sidebar-muted)', fontSize: 20, cursor: 'pointer', lineHeight: 1 }}
           className="sidebar-close">✕</button>
       </div>
 
       <nav style={{ flex: 1, padding: '12px 0' }}>
         {navItems.map(item => (
-          <NavLink key={item.to} to={item.to} end={item.to === '/'}
-            onClick={onClose}
-            style={({ isActive }) => ({
-              display: 'flex', alignItems: 'center', gap: 10,
-              padding: '10px 20px', color: 'white', textDecoration: 'none',
-              background: isActive ? '#334155' : 'transparent',
-              borderLeft: isActive ? '3px solid #38bdf8' : '3px solid transparent'
-            })}>
+          <NavLink key={item.to} to={item.to} end={item.to === '/'} onClick={onClose}
+            className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
             <span>{item.icon}</span>
             <span>{item.label}</span>
           </NavLink>
         ))}
       </nav>
 
-      <div style={{ padding: '16px 20px', borderTop: '1px solid #334155' }}>
+      <div style={{ padding: '16px 20px', borderTop: '1px solid var(--glass-border)' }}>
+        <button className="theme-toggle" onClick={cycleTheme} title="Đổi giao diện sáng/tối">
+          <span>{themeLabel[theme]}</span>
+        </button>
         <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 2 }}>{fullName}</div>
-        <div style={{ fontSize: 12, color: '#94a3b8', marginBottom: 12 }}>{email}</div>
-        <button onClick={handleLogout}
-          style={{ background: '#ef4444', color: 'white', border: 'none', borderRadius: 6,
-            padding: '6px 14px', cursor: 'pointer', fontSize: 13 }}>
+        <div style={{ fontSize: 12, color: 'var(--sidebar-muted)', marginBottom: 12 }}>{email}</div>
+        <button onClick={handleLogout} className="glass-btn glass-btn-danger" style={{ fontSize: 13, padding: '6px 14px' }}>
           Đăng xuất
         </button>
       </div>
