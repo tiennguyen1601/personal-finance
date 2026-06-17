@@ -88,14 +88,22 @@ function EntryForm({ goalName, onSubmit, onCancel }: {
   onSubmit: (dto: CreateSavingsEntryDto) => void;
   onCancel: () => void;
 }) {
-  const [amount, setAmount] = useState('');
+  const [amountRaw, setAmountRaw] = useState(0);
+  const [amountDisplay, setAmountDisplay] = useState('');
   const [note, setNote] = useState('');
   const [date, setDate] = useState(today());
 
+  const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const digits = e.target.value.replace(/\D/g, '');
+    const num = digits ? parseInt(digits, 10) : 0;
+    setAmountRaw(num);
+    setAmountDisplay(num ? new Intl.NumberFormat('vi-VN').format(num) : '');
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!amount || Number(amount) <= 0) return;
-    onSubmit({ amount: Number(amount), note: note || undefined, date });
+    if (!amountRaw || amountRaw <= 0) return;
+    onSubmit({ amount: amountRaw, note: note || undefined, date });
   };
 
   return (
@@ -103,7 +111,7 @@ function EntryForm({ goalName, onSubmit, onCancel }: {
       <p style={{ marginBottom: 16, color: 'var(--text-muted)', fontSize: 14 }}>Nạp tiền vào: <strong>{goalName}</strong></p>
       <div style={{ marginBottom: 14 }}>
         <label style={{ fontSize: 13, color: 'var(--text-muted)', display: 'block', marginBottom: 4 }}>Số tiền *</label>
-        <input className="glass-input" type="number" min="1" value={amount} onChange={e => setAmount(e.target.value)} placeholder="VD: 500000" required />
+        <input className="glass-input" type="text" inputMode="numeric" value={amountDisplay} onChange={handleAmountChange} placeholder="VD: 500.000" required />
       </div>
       <div style={{ marginBottom: 14 }}>
         <label style={{ fontSize: 13, color: 'var(--text-muted)', display: 'block', marginBottom: 4 }}>Ghi chú</label>
