@@ -8,13 +8,8 @@ interface Props {
   onCancel: () => void;
 }
 
-const inputStyle: React.CSSProperties = {
-  width: '100%', padding: '10px 12px', border: '1px solid #e2e8f0',
-  borderRadius: 8, fontSize: 14, boxSizing: 'border-box'
-};
-
 const labelStyle: React.CSSProperties = {
-  display: 'block', fontSize: 14, fontWeight: 500, marginBottom: 6
+  display: 'block', fontSize: 14, fontWeight: 500, marginBottom: 6, color: 'var(--text-strong)'
 };
 
 export default function TransactionForm({ categories, initial, onSubmit, onCancel }: Props) {
@@ -41,9 +36,10 @@ export default function TransactionForm({ categories, initial, onSubmit, onCance
         <div style={{ display: 'flex', gap: 8 }}>
           {(['Expense', 'Income'] as TransactionType[]).map(t => (
             <button key={t} type="button" onClick={() => { setType(t); setCategoryId(''); }}
-              style={{ flex: 1, padding: '8px', border: '2px solid', borderColor: type === t ? (t === 'Expense' ? '#ef4444' : '#22c55e') : '#e2e8f0',
-                background: type === t ? (t === 'Expense' ? '#fef2f2' : '#f0fdf4') : 'white',
-                borderRadius: 8, fontWeight: 600, cursor: 'pointer', color: type === t ? (t === 'Expense' ? '#ef4444' : '#16a34a') : '#64748b' }}>
+              className="chip"
+              style={type === t
+                ? { flex: 1, background: 'var(--accent-grad)', color: '#fff', cursor: 'pointer' }
+                : { flex: 1, cursor: 'pointer' }}>
               {t === 'Expense' ? 'Chi tiêu' : 'Thu nhập'}
             </button>
           ))}
@@ -52,12 +48,12 @@ export default function TransactionForm({ categories, initial, onSubmit, onCance
 
       <div style={{ marginBottom: 16 }}>
         <label style={labelStyle}>Số tiền (đ)</label>
-        <input type="number" value={amount} onChange={e => setAmount(e.target.value)} required min="1" style={inputStyle} />
+        <input type="number" value={amount} onChange={e => setAmount(e.target.value)} required min="1" className="glass-input" />
       </div>
 
       <div style={{ marginBottom: 16 }}>
         <label style={labelStyle}>Danh mục</label>
-        <select value={categoryId} onChange={e => setCategoryId(e.target.value)} required style={inputStyle}>
+        <select value={categoryId} onChange={e => setCategoryId(e.target.value)} required className="glass-select">
           <option value="">-- Chọn danh mục --</option>
           {filtered.map(c => <option key={c.id} value={c.id}>{c.icon} {c.name}</option>)}
         </select>
@@ -65,21 +61,19 @@ export default function TransactionForm({ categories, initial, onSubmit, onCance
 
       <div style={{ marginBottom: 16 }}>
         <label style={labelStyle}>Ngày</label>
-        <input type="date" value={date} onChange={e => setDate(e.target.value)} required style={inputStyle} />
+        <input type="date" value={date} onChange={e => setDate(e.target.value)} required className="glass-input" />
       </div>
 
       <div style={{ marginBottom: 24 }}>
         <label style={labelStyle}>Ghi chú</label>
-        <input type="text" value={note} onChange={e => setNote(e.target.value)} style={inputStyle} placeholder="Không bắt buộc" />
+        <input type="text" value={note} onChange={e => setNote(e.target.value)} className="glass-input" placeholder="Không bắt buộc" />
       </div>
 
       <div style={{ display: 'flex', gap: 8 }}>
-        <button type="button" onClick={onCancel}
-          style={{ flex: 1, padding: '10px', border: '1px solid #e2e8f0', borderRadius: 8, background: 'white', cursor: 'pointer' }}>
+        <button type="button" onClick={onCancel} className="glass-btn" style={{ flex: 1 }}>
           Hủy
         </button>
-        <button type="submit" disabled={loading}
-          style={{ flex: 1, padding: '10px', background: '#3b82f6', color: 'white', border: 'none', borderRadius: 8, fontWeight: 600, cursor: 'pointer' }}>
+        <button type="submit" disabled={loading} className="glass-btn glass-btn-primary" style={{ flex: 1 }}>
           {loading ? 'Đang lưu...' : (initial ? 'Cập nhật' : 'Thêm mới')}
         </button>
       </div>

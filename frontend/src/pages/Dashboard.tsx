@@ -5,8 +5,21 @@ import { transactionService } from '../services/transactionService';
 import { categoryService } from '../services/categoryService';
 import { useAppStore } from '../store/appStore';
 import type { Summary, Transaction } from '../types';
+import { useCountUp } from '../hooks/useCountUp';
 
 const fmt = (n: number) => new Intl.NumberFormat('vi-VN').format(n) + 'đ';
+
+function StatCard({ label, value, color, ready }: { label: string; value: number; color: string; ready: boolean }) {
+  const n = useCountUp(ready ? value : 0);
+  return (
+    <div className="glass-card interactive" style={{ padding: '20px 22px', borderLeft: `4px solid ${color}` }}>
+      <div style={{ color: 'var(--text-muted)', fontSize: 13, marginBottom: 6 }}>{label}</div>
+      <div style={{ fontSize: 24, fontWeight: 700, color }}>
+        {ready ? new Intl.NumberFormat('vi-VN').format(n) + 'đ' : '...'}
+      </div>
+    </div>
+  );
+}
 
 export default function Dashboard() {
   const now = new Date();
@@ -39,40 +52,23 @@ export default function Dashboard() {
     });
   }, []);
 
-  const cardStyle = (color: string): React.CSSProperties => ({
-    background: 'white', borderRadius: 12, padding: '20px 24px',
-    boxShadow: '0 1px 6px rgba(0,0,0,0.06)', borderLeft: `4px solid ${color}`
-  });
-
   return (
     <div>
       <h2 style={{ margin: '0 0 24px', fontSize: 22 }}>Dashboard</h2>
 
-      <div className="dashboard-cards">
-        <div style={cardStyle('#22c55e')}>
-          <div style={{ color: '#64748b', fontSize: 13, marginBottom: 6 }}>Tổng thu tháng này</div>
-          <div style={{ fontSize: 22, fontWeight: 700, color: '#16a34a' }}>{summary ? fmt(summary.totalIncome) : '...'}</div>
-        </div>
-        <div style={cardStyle('#ef4444')}>
-          <div style={{ color: '#64748b', fontSize: 13, marginBottom: 6 }}>Tổng chi tháng này</div>
-          <div style={{ fontSize: 22, fontWeight: 700, color: '#dc2626' }}>{summary ? fmt(summary.totalExpense) : '...'}</div>
-        </div>
-        <div style={cardStyle('#8b5cf6')}>
-          <div style={{ color: '#64748b', fontSize: 13, marginBottom: 6 }}>Đã tiết kiệm</div>
-          <div style={{ fontSize: 22, fontWeight: 700, color: '#7c3aed' }}>{summary ? fmt(summary.totalSaved) : '...'}</div>
-        </div>
-        <div style={cardStyle('#3b82f6')}>
-          <div style={{ color: '#64748b', fontSize: 13, marginBottom: 6 }}>Số dư</div>
-          <div style={{ fontSize: 22, fontWeight: 700, color: '#2563eb' }}>{summary ? fmt(summary.balance) : '...'}</div>
-        </div>
+      <div className="dashboard-cards stagger">
+        <StatCard label="Tổng thu tháng này" value={summary?.totalIncome ?? 0} color="var(--income)" ready={!!summary} />
+        <StatCard label="Tổng chi tháng này" value={summary?.totalExpense ?? 0} color="var(--expense)" ready={!!summary} />
+        <StatCard label="Đã tiết kiệm" value={summary?.totalSaved ?? 0} color="var(--saving)" ready={!!summary} />
+        <StatCard label="Số dư" value={summary?.balance ?? 0} color="var(--balance)" ready={!!summary} />
       </div>
 
       <div className="dashboard-bottom">
-        <div style={{ background: 'white', borderRadius: 12, padding: 24, boxShadow: '0 1px 6px rgba(0,0,0,0.06)' }}>
+        <div className="glass-card" style={{ padding: 24 }}>
           <h3 style={{ margin: '0 0 16px', fontSize: 16 }}>Chi tiêu 7 ngày qua</h3>
           <ResponsiveContainer width="100%" height={200}>
             <LineChart data={chartData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(148,163,184,0.2)" />
               <XAxis dataKey="label" tick={{ fontSize: 12 }} />
               <YAxis tick={{ fontSize: 12 }} tickFormatter={v => `${(v/1000).toFixed(0)}K`} />
               <Tooltip formatter={(v: any) => fmt(v as number)} />
@@ -81,24 +77,24 @@ export default function Dashboard() {
           </ResponsiveContainer>
         </div>
 
-        <div style={{ background: 'white', borderRadius: 12, padding: 24, boxShadow: '0 1px 6px rgba(0,0,0,0.06)' }}>
+        <div className="glass-card" style={{ padding: 24 }}>
           <h3 style={{ margin: '0 0 16px', fontSize: 16 }}>Giao dịch gần nhất</h3>
           {recent.map(t => (
-            <div key={t.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid #f1f5f9' }}>
+            <div key={t.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid var(--glass-border)' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                 <span style={{ fontSize: 20 }}>{t.categoryIcon}</span>
                 <div>
                   <div style={{ fontSize: 14, fontWeight: 500 }}>{t.categoryName}</div>
-                  <div style={{ fontSize: 12, color: '#94a3b8' }}>{new Date(t.date).toLocaleDateString('vi-VN')}</div>
+                  <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>{new Date(t.date).toLocaleDateString('vi-VN')}</div>
                 </div>
               </div>
-              <div style={{ fontWeight: 600, color: t.type === 'Income' ? '#16a34a' : '#dc2626' }}>
+              <div style={{ fontWeight: 600, color: t.type === 'Income' ? 'var(--income)' : 'var(--expense)' }}>
                 {t.type === 'Income' ? '+' : '-'}{fmt(t.amount)}
               </div>
             </div>
           ))}
           {recent.length === 0 && (
-            <p style={{ color: '#94a3b8', textAlign: 'center', marginTop: 20 }}>Chưa có giao dịch nào</p>
+            <p style={{ color: 'var(--text-muted)', textAlign: 'center', marginTop: 20 }}>Chưa có giao dịch nào</p>
           )}
         </div>
       </div>

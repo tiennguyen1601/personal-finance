@@ -32,20 +32,17 @@ function GoalForm({ initial, onSubmit, onCancel }: {
     });
   };
 
-  const inputStyle: React.CSSProperties = {
-    width: '100%', padding: '8px 12px', border: '1px solid #e2e8f0',
-    borderRadius: 8, fontSize: 14, boxSizing: 'border-box',
-  };
+  const inputProps = { className: 'glass-input', style: { width: '100%', boxSizing: 'border-box' as const } };
 
   return (
     <form onSubmit={handleSubmit}>
       <div style={{ marginBottom: 14 }}>
-        <label style={{ fontSize: 13, color: '#64748b', display: 'block', marginBottom: 4 }}>Tên mục tiêu *</label>
-        <input style={inputStyle} value={name} onChange={e => setName(e.target.value)} placeholder="VD: Mua điện thoại" required />
+        <label style={{ fontSize: 13, color: 'var(--text-muted)', display: 'block', marginBottom: 4 }}>Tên mục tiêu *</label>
+        <input {...inputProps} value={name} onChange={e => setName(e.target.value)} placeholder="VD: Mua điện thoại" required />
       </div>
 
       <div style={{ marginBottom: 14 }}>
-        <label style={{ fontSize: 13, color: '#64748b', display: 'block', marginBottom: 4 }}>Icon</label>
+        <label style={{ fontSize: 13, color: 'var(--text-muted)', display: 'block', marginBottom: 4 }}>Icon</label>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
           {ICONS.map(i => (
             <button key={i} type="button" onClick={() => setIcon(i)}
@@ -57,7 +54,7 @@ function GoalForm({ initial, onSubmit, onCancel }: {
       </div>
 
       <div style={{ marginBottom: 14 }}>
-        <label style={{ fontSize: 13, color: '#64748b', display: 'block', marginBottom: 4 }}>Màu</label>
+        <label style={{ fontSize: 13, color: 'var(--text-muted)', display: 'block', marginBottom: 4 }}>Màu</label>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
           {COLORS.map(c => (
             <button key={c} type="button" onClick={() => setColor(c)}
@@ -67,22 +64,18 @@ function GoalForm({ initial, onSubmit, onCancel }: {
       </div>
 
       <div style={{ marginBottom: 14 }}>
-        <label style={{ fontSize: 13, color: '#64748b', display: 'block', marginBottom: 4 }}>Số tiền mục tiêu (để trống nếu không có)</label>
-        <input style={inputStyle} type="number" min="0" value={target} onChange={e => setTarget(e.target.value)} placeholder="VD: 15000000" />
+        <label style={{ fontSize: 13, color: 'var(--text-muted)', display: 'block', marginBottom: 4 }}>Số tiền mục tiêu (để trống nếu không có)</label>
+        <input {...inputProps} type="number" min="0" value={target} onChange={e => setTarget(e.target.value)} placeholder="VD: 15000000" />
       </div>
 
       <div style={{ marginBottom: 20 }}>
-        <label style={{ fontSize: 13, color: '#64748b', display: 'block', marginBottom: 4 }}>Deadline (tuỳ chọn)</label>
-        <input style={inputStyle} type="date" value={deadline} onChange={e => setDeadline(e.target.value)} />
+        <label style={{ fontSize: 13, color: 'var(--text-muted)', display: 'block', marginBottom: 4 }}>Deadline (tuỳ chọn)</label>
+        <input {...inputProps} type="date" value={deadline} onChange={e => setDeadline(e.target.value)} />
       </div>
 
       <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
-        <button type="button" onClick={onCancel}
-          style={{ padding: '8px 16px', border: '1px solid #e2e8f0', borderRadius: 8, background: 'white', cursor: 'pointer' }}>
-          Huỷ
-        </button>
-        <button type="submit"
-          style={{ padding: '8px 16px', background: '#3b82f6', color: 'white', border: 'none', borderRadius: 8, fontWeight: 600, cursor: 'pointer' }}>
+        <button type="button" onClick={onCancel} className="glass-btn">Huỷ</button>
+        <button type="submit" className="glass-btn glass-btn-primary" style={{ padding: '8px 16px' }}>
           {initial ? 'Lưu' : 'Tạo'}
         </button>
       </div>
@@ -105,35 +98,24 @@ function EntryForm({ goalName, onSubmit, onCancel }: {
     onSubmit({ amount: Number(amount), note: note || undefined, date });
   };
 
-  const inputStyle: React.CSSProperties = {
-    width: '100%', padding: '8px 12px', border: '1px solid #e2e8f0',
-    borderRadius: 8, fontSize: 14, boxSizing: 'border-box',
-  };
-
   return (
     <form onSubmit={handleSubmit}>
-      <p style={{ marginBottom: 16, color: '#64748b', fontSize: 14 }}>Nạp tiền vào: <strong>{goalName}</strong></p>
+      <p style={{ marginBottom: 16, color: 'var(--text-muted)', fontSize: 14 }}>Nạp tiền vào: <strong>{goalName}</strong></p>
       <div style={{ marginBottom: 14 }}>
-        <label style={{ fontSize: 13, color: '#64748b', display: 'block', marginBottom: 4 }}>Số tiền *</label>
-        <input style={inputStyle} type="number" min="1" value={amount} onChange={e => setAmount(e.target.value)} placeholder="VD: 500000" required />
+        <label style={{ fontSize: 13, color: 'var(--text-muted)', display: 'block', marginBottom: 4 }}>Số tiền *</label>
+        <input className="glass-input" type="number" min="1" value={amount} onChange={e => setAmount(e.target.value)} placeholder="VD: 500000" required />
       </div>
       <div style={{ marginBottom: 14 }}>
-        <label style={{ fontSize: 13, color: '#64748b', display: 'block', marginBottom: 4 }}>Ghi chú</label>
-        <input style={inputStyle} value={note} onChange={e => setNote(e.target.value)} placeholder="Tuỳ chọn" />
+        <label style={{ fontSize: 13, color: 'var(--text-muted)', display: 'block', marginBottom: 4 }}>Ghi chú</label>
+        <input className="glass-input" value={note} onChange={e => setNote(e.target.value)} placeholder="Tuỳ chọn" />
       </div>
       <div style={{ marginBottom: 20 }}>
-        <label style={{ fontSize: 13, color: '#64748b', display: 'block', marginBottom: 4 }}>Ngày</label>
-        <input style={inputStyle} type="date" value={date} onChange={e => setDate(e.target.value)} required />
+        <label style={{ fontSize: 13, color: 'var(--text-muted)', display: 'block', marginBottom: 4 }}>Ngày</label>
+        <input className="glass-input" type="date" value={date} onChange={e => setDate(e.target.value)} required />
       </div>
       <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
-        <button type="button" onClick={onCancel}
-          style={{ padding: '8px 16px', border: '1px solid #e2e8f0', borderRadius: 8, background: 'white', cursor: 'pointer' }}>
-          Huỷ
-        </button>
-        <button type="submit"
-          style={{ padding: '8px 16px', background: '#8b5cf6', color: 'white', border: 'none', borderRadius: 8, fontWeight: 600, cursor: 'pointer' }}>
-          Nạp tiền
-        </button>
+        <button type="button" onClick={onCancel} className="glass-btn">Huỷ</button>
+        <button type="submit" className="glass-btn glass-btn-primary" style={{ padding: '8px 16px' }}>Nạp tiền</button>
       </div>
     </form>
   );
@@ -181,12 +163,11 @@ export default function Savings() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
         <div>
           <h2 style={{ margin: 0, fontSize: 22 }}>Tiết kiệm 🐷</h2>
-          <p style={{ margin: '4px 0 0', fontSize: 14, color: '#64748b' }}>
-            Tổng đã tiết kiệm: <strong style={{ color: '#8b5cf6' }}>{fmt(totalSaved)}</strong>
+          <p style={{ margin: '4px 0 0', fontSize: 14, color: 'var(--text-muted)' }}>
+            Tổng đã tiết kiệm: <strong style={{ color: 'var(--saving)' }}>{fmt(totalSaved)}</strong>
           </p>
         </div>
-        <button onClick={() => setShowCreate(true)}
-          style={{ background: '#8b5cf6', color: 'white', border: 'none', borderRadius: 8, padding: '10px 20px', fontWeight: 600, cursor: 'pointer' }}>
+        <button onClick={() => setShowCreate(true)} className="glass-btn glass-btn-primary">
           + Tạo mục tiêu
         </button>
       </div>
@@ -195,25 +176,21 @@ export default function Savings() {
         {goals.map(goal => {
           const pct = goal.targetAmount ? Math.min(100, Math.round(goal.currentAmount / goal.targetAmount * 100)) : null;
           return (
-            <div key={goal.id} style={{
-              background: 'white', borderRadius: 12, padding: 20,
-              boxShadow: '0 1px 6px rgba(0,0,0,0.06)',
-              borderLeft: `4px solid ${goal.color}`
-            }}>
+            <div key={goal.id} className="glass-card interactive" style={{ padding: 20, borderLeft: `4px solid ${goal.color}` }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                   <span style={{ fontSize: 28 }}>{goal.icon}</span>
                   <div>
-                    <div style={{ fontWeight: 600, fontSize: 15 }}>{goal.name}</div>
+                    <div style={{ fontWeight: 600, fontSize: 15, color: 'var(--text-strong)' }}>{goal.name}</div>
                     {goal.deadline && (
-                      <div style={{ fontSize: 12, color: '#94a3b8' }}>
+                      <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>
                         Deadline: {new Date(goal.deadline).toLocaleDateString('vi-VN')}
                       </div>
                     )}
                   </div>
                 </div>
                 {goal.isCompleted && (
-                  <span style={{ fontSize: 12, background: '#f0fdf4', color: '#16a34a', padding: '2px 8px', borderRadius: 20, fontWeight: 600 }}>
+                  <span className="chip" style={{ color: 'var(--income)' }}>
                     Hoàn thành 🎉
                   </span>
                 )}
@@ -221,15 +198,15 @@ export default function Savings() {
 
               <div style={{ marginBottom: 12 }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, marginBottom: 6 }}>
-                  <span style={{ color: '#64748b' }}>Đã tiết kiệm</span>
+                  <span style={{ color: 'var(--text-muted)' }}>Đã tiết kiệm</span>
                   <span style={{ fontWeight: 600, color: goal.color }}>{fmt(goal.currentAmount)}</span>
                 </div>
                 {goal.targetAmount && (
                   <>
-                    <div style={{ background: '#f1f5f9', borderRadius: 99, height: 8, overflow: 'hidden' }}>
-                      <div style={{ width: `${pct}%`, height: '100%', background: goal.color, borderRadius: 99, transition: 'width 0.3s' }} />
+                    <div style={{ background: 'rgba(148,163,184,0.25)', borderRadius: 999, height: 10, overflow: 'hidden' }}>
+                      <div style={{ width: `${pct}%`, height: '100%', background: 'var(--accent-grad)', borderRadius: 999, transition: 'width 0.6s ease' }} />
                     </div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, color: '#94a3b8', marginTop: 4 }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, color: 'var(--text-muted)', marginTop: 4 }}>
                       <span>{pct}%</span>
                       <span>Mục tiêu: {fmt(goal.targetAmount)}</span>
                     </div>
@@ -238,20 +215,13 @@ export default function Savings() {
               </div>
 
               <div style={{ display: 'flex', gap: 8 }}>
-                <button onClick={() => setDepositing(goal)}
-                  style={{ flex: 1, background: goal.color, color: 'white', border: 'none', borderRadius: 8, padding: '8px 0', fontWeight: 600, cursor: 'pointer', fontSize: 13 }}>
+                <button onClick={() => setDepositing(goal)} className="glass-btn glass-btn-primary" style={{ flex: 1, fontSize: 13, padding: '8px 0' }}>
                   + Nạp tiền
                 </button>
                 {!goal.isDefault && (
                   <>
-                    <button onClick={() => setEditing(goal)}
-                      style={{ background: 'none', border: '1px solid #e2e8f0', borderRadius: 8, padding: '8px 12px', cursor: 'pointer', color: '#3b82f6', fontSize: 13 }}>
-                      Sửa
-                    </button>
-                    <button onClick={() => handleDelete(goal)}
-                      style={{ background: 'none', border: '1px solid #e2e8f0', borderRadius: 8, padding: '8px 12px', cursor: 'pointer', color: '#ef4444', fontSize: 13 }}>
-                      Xóa
-                    </button>
+                    <button onClick={() => setEditing(goal)} className="glass-btn" style={{ fontSize: 13, padding: '8px 12px' }}>Sửa</button>
+                    <button onClick={() => handleDelete(goal)} className="glass-btn glass-btn-danger" style={{ fontSize: 13, padding: '8px 12px' }}>Xóa</button>
                   </>
                 )}
               </div>

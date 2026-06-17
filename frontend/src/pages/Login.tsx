@@ -27,32 +27,30 @@ export default function Login() {
   };
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f1f5f9' }}>
-      <div style={{ background: 'white', padding: 40, borderRadius: 12, width: 380, boxShadow: '0 4px 20px rgba(0,0,0,0.08)' }}>
-        <h2 style={{ margin: '0 0 8px', fontSize: 24 }}>💰 Chi Tiêu</h2>
-        <p style={{ color: '#64748b', margin: '0 0 24px' }}>Đăng nhập vào tài khoản của bạn</p>
+    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', background: 'var(--page-bg)', padding: 16 }}>
+      <div className="aurora" aria-hidden="true"><span className="b1" /><span className="b2" /><span className="b3" /></div>
+      <div className="glass-card fade-in-up" style={{ padding: 40, width: 380, maxWidth: '90vw' }}>
+        <h2 style={{ margin: '0 0 8px', fontSize: 24, background: 'var(--accent-grad)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>💰 Chi Tiêu</h2>
+        <p style={{ color: 'var(--text-muted)', margin: '0 0 24px' }}>Đăng nhập vào tài khoản của bạn</p>
 
-        {error && <div style={{ background: '#fef2f2', color: '#ef4444', padding: '10px 14px', borderRadius: 8, marginBottom: 16, fontSize: 14 }}>{error}</div>}
+        {error && <div style={{ background: 'rgba(220,38,38,0.12)', color: 'var(--expense)', padding: '10px 14px', borderRadius: 8, marginBottom: 16, fontSize: 14 }}>{error}</div>}
 
         <form onSubmit={handleSubmit}>
           <div style={{ marginBottom: 16 }}>
-            <label style={{ display: 'block', fontSize: 14, fontWeight: 500, marginBottom: 6 }}>Email</label>
-            <input type="email" value={email} onChange={e => setEmail(e.target.value)} required
-              style={{ width: '100%', padding: '10px 12px', border: '1px solid #e2e8f0', borderRadius: 8, fontSize: 14, boxSizing: 'border-box' }} />
+            <label style={{ display: 'block', fontSize: 14, fontWeight: 500, marginBottom: 6, color: 'var(--text-strong)' }}>Email</label>
+            <input type="email" value={email} onChange={e => setEmail(e.target.value)} required className="glass-input" />
           </div>
           <div style={{ marginBottom: 24 }}>
-            <label style={{ display: 'block', fontSize: 14, fontWeight: 500, marginBottom: 6 }}>Mật khẩu</label>
-            <input type="password" value={password} onChange={e => setPassword(e.target.value)} required
-              style={{ width: '100%', padding: '10px 12px', border: '1px solid #e2e8f0', borderRadius: 8, fontSize: 14, boxSizing: 'border-box' }} />
+            <label style={{ display: 'block', fontSize: 14, fontWeight: 500, marginBottom: 6, color: 'var(--text-strong)' }}>Mật khẩu</label>
+            <input type="password" value={password} onChange={e => setPassword(e.target.value)} required className="glass-input" />
           </div>
-          <button type="submit" disabled={loading}
-            style={{ width: '100%', padding: '11px', background: '#3b82f6', color: 'white', border: 'none', borderRadius: 8, fontSize: 15, fontWeight: 600, cursor: 'pointer' }}>
+          <button type="submit" disabled={loading} className="glass-btn glass-btn-primary" style={{ width: '100%', padding: '11px', fontSize: 15 }}>
             {loading ? 'Đang đăng nhập...' : 'Đăng nhập'}
           </button>
         </form>
 
-        <p style={{ textAlign: 'center', marginTop: 20, fontSize: 14, color: '#64748b' }}>
-          Chưa có tài khoản? <Link to="/register" style={{ color: '#3b82f6' }}>Đăng ký</Link>
+        <p style={{ textAlign: 'center', marginTop: 20, fontSize: 14, color: 'var(--text-muted)' }}>
+          Chưa có tài khoản? <Link to="/register" style={{ color: 'var(--accent)' }}>Đăng ký</Link>
         </p>
       </div>
     </div>
