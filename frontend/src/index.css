@@ -1,52 +1,98 @@
 :root {
-  --text: #6b6375;
-  --text-h: #08060d;
-  --bg: #fff;
-  --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
-  --social-bg: rgba(244, 243, 236, 0.5);
-  --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+  /* Light theme tokens */
+  --text: #4b5563;
+  --text-muted: #94a3b8;
+  --text-strong: #0f172a;
+
+  --accent: #7c3aed;
+  --accent-2: #2563eb;
+  --accent-grad: linear-gradient(135deg, #7c3aed 0%, #2563eb 100%);
+
+  --glass-bg: rgba(255, 255, 255, 0.55);
+  --glass-bg-strong: rgba(255, 255, 255, 0.75);
+  --glass-border: rgba(255, 255, 255, 0.6);
+  --glass-shadow: 0 8px 32px rgba(31, 38, 135, 0.12), 0 2px 8px rgba(31, 38, 135, 0.06);
+  --blur: 18px;
+
+  --income: #16a34a;
+  --expense: #dc2626;
+  --saving: #7c3aed;
+  --balance: #2563eb;
+
+  --radius: 18px;
+  --radius-sm: 12px;
+
+  --page-bg: #eef1f9;
+  --blob-1: rgba(124, 58, 237, 0.45);
+  --blob-2: rgba(37, 99, 235, 0.40);
+  --blob-3: rgba(236, 72, 153, 0.32);
+
+  --sidebar-bg: rgba(30, 41, 59, 0.72);
+  --sidebar-text: #e2e8f0;
+  --sidebar-muted: #94a3b8;
 
   --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
-
-  font: 18px/145% var(--sans);
-  letter-spacing: 0.18px;
-  color-scheme: light dark;
+  font: 16px/1.5 var(--sans);
   color: var(--text);
-  background: var(--bg);
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
+  color-scheme: light dark;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-
-  @media (max-width: 1024px) {
-    font-size: 16px;
-  }
+  text-rendering: optimizeLegibility;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
-    --shadow:
-      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
-  }
+/* Dark via explicit toggle */
+:root[data-theme='dark'] {
+  --text: #cbd5e1;
+  --text-muted: #94a3b8;
+  --text-strong: #f1f5f9;
 
-  #social .button-icon {
-    filter: invert(1) brightness(2);
+  --accent: #c084fc;
+  --accent-2: #60a5fa;
+  --accent-grad: linear-gradient(135deg, #c084fc 0%, #60a5fa 100%);
+
+  --glass-bg: rgba(30, 32, 48, 0.55);
+  --glass-bg-strong: rgba(30, 32, 48, 0.78);
+  --glass-border: rgba(148, 163, 184, 0.22);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.45), 0 2px 8px rgba(0, 0, 0, 0.30);
+  --blur: 18px;
+
+  --income: #4ade80;
+  --expense: #f87171;
+  --saving: #c084fc;
+  --balance: #60a5fa;
+
+  --page-bg: #0b1020;
+  --blob-1: rgba(124, 58, 237, 0.55);
+  --blob-2: rgba(37, 99, 235, 0.50);
+  --blob-3: rgba(236, 72, 153, 0.38);
+
+  --sidebar-bg: rgba(15, 18, 32, 0.70);
+  --sidebar-text: #e2e8f0;
+  --sidebar-muted: #94a3b8;
+}
+
+/* Dark via system preference (only when user has NOT chosen explicitly) */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    --text: #cbd5e1;
+    --text-muted: #94a3b8;
+    --text-strong: #f1f5f9;
+    --accent: #c084fc;
+    --accent-2: #60a5fa;
+    --accent-grad: linear-gradient(135deg, #c084fc 0%, #60a5fa 100%);
+    --glass-bg: rgba(30, 32, 48, 0.55);
+    --glass-bg-strong: rgba(30, 32, 48, 0.78);
+    --glass-border: rgba(148, 163, 184, 0.22);
+    --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.45), 0 2px 8px rgba(0, 0, 0, 0.30);
+    --income: #4ade80;
+    --expense: #f87171;
+    --saving: #c084fc;
+    --balance: #60a5fa;
+    --page-bg: #0b1020;
+    --blob-1: rgba(124, 58, 237, 0.55);
+    --blob-2: rgba(37, 99, 235, 0.50);
+    --blob-3: rgba(236, 72, 153, 0.38);
+    --sidebar-bg: rgba(15, 18, 32, 0.70);
   }
 }
 
@@ -60,13 +106,17 @@
 
 body {
   margin: 0;
+  background: var(--page-bg);
+  color: var(--text);
+  min-height: 100vh;
 }
 
 /* ===== RESPONSIVE LAYOUT ===== */
 .app-layout {
   display: flex;
   min-height: 100vh;
-  background: #f1f5f9;
+  position: relative;
+  background: var(--page-bg);
 }
 
 .sidebar {
