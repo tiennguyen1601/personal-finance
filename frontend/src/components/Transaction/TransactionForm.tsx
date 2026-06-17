@@ -14,7 +14,10 @@ const labelStyle: React.CSSProperties = {
 
 export default function TransactionForm({ categories, initial, onSubmit, onCancel }: Props) {
   const [type, setType] = useState<TransactionType>(initial?.type ?? 'Expense');
-  const [amount, setAmount] = useState(initial?.amount.toString() ?? '');
+  const [amountRaw, setAmountRaw] = useState(initial?.amount ?? 0);
+  const [amountDisplay, setAmountDisplay] = useState(
+    initial?.amount ? new Intl.NumberFormat('vi-VN').format(initial.amount) : ''
+  );
   const [categoryId, setCategoryId] = useState(initial?.categoryId ?? '');
   const [note, setNote] = useState(initial?.note ?? '');
   const [date, setDate] = useState(initial ? initial.date.split('T')[0] : new Date().toISOString().split('T')[0]);
@@ -22,10 +25,17 @@ export default function TransactionForm({ categories, initial, onSubmit, onCance
 
   const filtered = categories.filter(c => c.type === type);
 
+  const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const digits = e.target.value.replace(/\D/g, '');
+    const num = digits ? parseInt(digits, 10) : 0;
+    setAmountRaw(num);
+    setAmountDisplay(num ? new Intl.NumberFormat('vi-VN').format(num) : '');
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    await onSubmit({ amount: parseFloat(amount), type, categoryId, note: note || undefined, date });
+    await onSubmit({ amount: amountRaw, type, categoryId, note: note || undefined, date });
     setLoading(false);
   };
 
@@ -48,7 +58,7 @@ export default function TransactionForm({ categories, initial, onSubmit, onCance
 
       <div style={{ marginBottom: 16 }}>
         <label style={labelStyle}>Số tiền (đ)</label>
-        <input type="number" value={amount} onChange={e => setAmount(e.target.value)} required min="1" className="glass-input" />
+        <input type="text" inputMode="numeric" value={amountDisplay} onChange={handleAmountChange} required className="glass-input" placeholder="VD: 500.000" />
       </div>
 
       <div style={{ marginBottom: 16 }}>
