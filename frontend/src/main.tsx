@@ -5,6 +5,10 @@ import App from './App';
 import { auth } from './services/firebase';
 import { useAuthStore } from './store/authStore';
 import './index.css';
+import { applyTheme, useThemeStore } from './store/themeStore';
+
+// Áp theme đã lưu trước khi render để tránh nháy theme khi tải lại.
+applyTheme(useThemeStore.getState().theme);
 
 // Khôi phục phiên đăng nhập từ Firebase (giữ đăng nhập sau khi F5).
 onAuthStateChanged(auth, (user) => {
