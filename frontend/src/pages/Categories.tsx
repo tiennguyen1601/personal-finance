@@ -7,11 +7,6 @@ import type { Category, CreateCategoryDto, TransactionType } from '../types';
 const ICONS = ['🍔','🚗','🎮','🛍️','💊','📄','💰','🎁','📈','💡','✈️','🏠','📚','🎵','🏋️','☕','🎂','🐶'];
 const COLORS = ['#ef4444','#f97316','#eab308','#22c55e','#14b8a6','#3b82f6','#a855f7','#ec4899','#64748b','#78716c'];
 
-const inputStyle: React.CSSProperties = {
-  width: '100%', padding: '10px 12px', border: '1px solid #e2e8f0',
-  borderRadius: 8, fontSize: 14, boxSizing: 'border-box'
-};
-
 export default function Categories() {
   const { categories, setCategories } = useAppStore();
   const [showModal, setShowModal] = useState(false);
@@ -60,19 +55,19 @@ export default function Categories() {
 
   const renderGroup = (title: string, items: Category[]) => (
     <div style={{ marginBottom: 32 }}>
-      <h3 style={{ fontSize: 16, margin: '0 0 16px', color: '#374151' }}>{title}</h3>
+      <h3 style={{ fontSize: 16, margin: '0 0 16px', color: 'var(--text-strong)' }}>{title}</h3>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: 12 }}>
         {items.map(c => (
-          <div key={c.id} style={{ background: 'white', borderRadius: 12, padding: 16, boxShadow: '0 1px 6px rgba(0,0,0,0.06)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
-            <div style={{ width: 48, height: 48, borderRadius: '50%', background: c.color + '22', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 24 }}>{c.icon}</div>
-            <div style={{ fontSize: 14, fontWeight: 600, textAlign: 'center' }}>{c.name}</div>
+          <div key={c.id} className="glass-card interactive" style={{ padding: 16, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
+            <div style={{ width: 56, height: 56, borderRadius: '50%', background: c.color + '22', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 28 }}>{c.icon}</div>
+            <div style={{ fontSize: 15, fontWeight: 600, textAlign: 'center', color: 'var(--text-strong)' }}>{c.name}</div>
             {!c.isDefault ? (
               <div style={{ display: 'flex', gap: 6 }}>
-                <button onClick={() => openEdit(c)} style={{ fontSize: 12, padding: '4px 10px', border: '1px solid #e2e8f0', borderRadius: 6, cursor: 'pointer', background: 'white', color: '#3b82f6' }}>Sửa</button>
-                <button onClick={() => handleDelete(c.id)} style={{ fontSize: 12, padding: '4px 10px', border: '1px solid #fee2e2', borderRadius: 6, cursor: 'pointer', background: '#fef2f2', color: '#ef4444' }}>Xóa</button>
+                <button onClick={() => openEdit(c)} className="glass-btn" style={{ fontSize: 12, padding: '4px 10px' }}>Sửa</button>
+                <button onClick={() => handleDelete(c.id)} className="glass-btn glass-btn-danger" style={{ fontSize: 12, padding: '4px 10px' }}>Xóa</button>
               </div>
             ) : (
-              <span style={{ fontSize: 11, color: '#94a3b8' }}>Mặc định</span>
+              <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>Mặc định</span>
             )}
           </div>
         ))}
@@ -85,7 +80,7 @@ export default function Categories() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
         <h2 style={{ margin: 0, fontSize: 22 }}>Danh mục</h2>
         <button onClick={openCreate}
-          style={{ background: '#3b82f6', color: 'white', border: 'none', borderRadius: 8, padding: '10px 20px', fontWeight: 600, cursor: 'pointer' }}>
+          className="glass-btn glass-btn-primary" style={{ fontWeight: 600 }}>
           + Thêm danh mục
         </button>
       </div>
@@ -98,7 +93,7 @@ export default function Categories() {
           <form onSubmit={handleSubmit}>
             <div style={{ marginBottom: 16 }}>
               <label style={{ display: 'block', fontSize: 14, fontWeight: 500, marginBottom: 6 }}>Tên</label>
-              <input value={name} onChange={e => setName(e.target.value)} required style={inputStyle} />
+              <input value={name} onChange={e => setName(e.target.value)} required className="glass-input" style={{ width: '100%', boxSizing: 'border-box' }} />
             </div>
             <div style={{ marginBottom: 16 }}>
               <label style={{ display: 'block', fontSize: 14, fontWeight: 500, marginBottom: 6 }}>Icon</label>
@@ -127,7 +122,7 @@ export default function Categories() {
                   {(['Expense', 'Income'] as TransactionType[]).map(t => (
                     <button key={t} type="button" onClick={() => setType(t)}
                       style={{ flex: 1, padding: 8, border: '2px solid', borderColor: type === t ? '#3b82f6' : '#e2e8f0',
-                        borderRadius: 8, fontWeight: 600, cursor: 'pointer', background: type === t ? '#eff6ff' : 'white', color: type === t ? '#3b82f6' : '#64748b' }}>
+                        borderRadius: 8, fontWeight: 600, cursor: 'pointer', background: type === t ? '#eff6ff' : 'white', color: type === t ? '#3b82f6' : 'var(--text-muted)' }}>
                       {t === 'Expense' ? 'Chi tiêu' : 'Thu nhập'}
                     </button>
                   ))}
@@ -135,8 +130,8 @@ export default function Categories() {
               </div>
             )}
             <div style={{ display: 'flex', gap: 8 }}>
-              <button type="button" onClick={() => setShowModal(false)} style={{ flex: 1, padding: 10, border: '1px solid #e2e8f0', borderRadius: 8, background: 'white', cursor: 'pointer' }}>Hủy</button>
-              <button type="submit" disabled={loading} style={{ flex: 1, padding: 10, background: '#3b82f6', color: 'white', border: 'none', borderRadius: 8, fontWeight: 600, cursor: 'pointer' }}>
+              <button type="button" onClick={() => setShowModal(false)} className="glass-btn" style={{ flex: 1 }}>Hủy</button>
+              <button type="submit" disabled={loading} className="glass-btn glass-btn-primary" style={{ flex: 1, fontWeight: 600 }}>
                 {loading ? 'Đang lưu...' : (editing ? 'Cập nhật' : 'Thêm mới')}
               </button>
             </div>
