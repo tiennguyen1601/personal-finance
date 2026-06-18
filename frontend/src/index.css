@@ -435,3 +435,23 @@ code {
   transition: background 0.2s ease;
 }
 .theme-toggle:hover { background: rgba(255,255,255,0.16); }
+
+/* ===== SKELETON LOADER ===== */
+.skeleton {
+  background: var(--glass-bg-strong);
+  border: 1px solid var(--glass-border);
+  position: relative;
+  overflow: hidden;
+  display: block;
+}
+.skeleton::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.18) 50%, transparent 100%);
+  animation: shimmer 1.6s infinite;
+}
+@keyframes shimmer {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}

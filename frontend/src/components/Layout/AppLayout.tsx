@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Outlet, Navigate } from 'react-router-dom';
+import { Toaster } from 'react-hot-toast';
 import Sidebar from './Sidebar';
 import { useAuthStore } from '../../store/authStore';
 
@@ -28,6 +29,29 @@ export default function AppLayout() {
       <main className="main-content fade-in">
         <Outlet />
       </main>
+      <Toaster
+        position="bottom-right"
+        toastOptions={{
+          duration: 3000,
+          style: {
+            background: 'var(--glass-bg-strong)',
+            backdropFilter: 'blur(18px)',
+            WebkitBackdropFilter: 'blur(18px)',
+            border: '1px solid var(--glass-border)',
+            color: 'var(--text-strong)',
+            borderRadius: '12px',
+            boxShadow: 'var(--glass-shadow)',
+            fontSize: '14px',
+            fontWeight: 500,
+          },
+          success: {
+            iconTheme: { primary: 'var(--income)', secondary: '#fff' },
+          },
+          error: {
+            iconTheme: { primary: 'var(--expense)', secondary: '#fff' },
+          },
+        }}
+      />
     </div>
   );
 }
