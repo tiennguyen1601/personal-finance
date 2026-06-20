@@ -252,30 +252,40 @@ h3 { font-size: 17px; font-weight: 700; }
 @media (max-width: 1024px) { h1 { font-size: 30px; } h2 { font-size: 21px; } }
 p { margin: 0; }
 
-/* ===== AURORA BACKGROUND ===== */
-.aurora {
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  overflow: hidden;
-  pointer-events: none;
-}
-.aurora span {
-  position: absolute;
-  display: block;
-  width: 45vmax;
-  height: 45vmax;
-  border-radius: 50%;
-  filter: blur(80px);
-  opacity: 0.85;
-}
-.aurora .b1 { background: var(--blob-1); top: -10vmax; left: -8vmax; animation: drift1 22s ease-in-out infinite; }
-.aurora .b2 { background: var(--blob-2); bottom: -12vmax; right: -6vmax; animation: drift2 26s ease-in-out infinite; }
-.aurora .b3 { background: var(--blob-3); top: 30vmax; left: 40vw; animation: drift3 30s ease-in-out infinite; }
+/* ===== BACKDROP ===== */
+.backdrop { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
 
+/* manga: halftone phủ + speed-lines góc */
+:root[data-skin='manga'] .backdrop {
+  background-image: radial-gradient(var(--halftone) 1.4px, transparent 1.6px);
+  background-size: 9px 9px;
+}
+.speedlines {
+  position: absolute; top: -20%; right: -10%; width: 60%; height: 70%;
+  background: repeating-linear-gradient(115deg, var(--halftone) 0 2px, transparent 2px 13px);
+  transform: skewX(-12deg); opacity: 0.5;
+}
+
+/* anime: tinh vân + tro lửa */
+.neb { position: absolute; border-radius: 50%; filter: blur(70px); }
+.neb.a { width: 46vmax; height: 46vmax; top: -12vmax; left: -8vmax; background: var(--blob-1); animation: drift1 22s ease-in-out infinite; }
+.neb.b { width: 40vmax; height: 40vmax; bottom: -14vmax; right: -6vmax; background: var(--blob-2); animation: drift2 26s ease-in-out infinite; }
+.neb.c { width: 30vmax; height: 30vmax; top: 35vmax; left: 40vw; background: var(--blob-3); animation: drift3 30s ease-in-out infinite; }
+.embers { position: absolute; inset: 0; }
+.ember {
+  position: absolute; bottom: -10px; border-radius: 50%;
+  background: var(--ornament); box-shadow: 0 0 8px var(--ornament);
+  opacity: 0; animation: rise linear infinite;
+}
+@keyframes rise {
+  0% { transform: translateY(0) scale(1); opacity: 0; }
+  10% { opacity: 0.9; }
+  100% { transform: translateY(-105vh) scale(0.4); opacity: 0; }
+}
 @keyframes drift1 { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(8vmax,6vmax) scale(1.15); } }
 @keyframes drift2 { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(-7vmax,-5vmax) scale(1.1); } }
 @keyframes drift3 { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(-6vmax,4vmax) scale(1.2); } }
+@media (prefers-reduced-motion: reduce) { .ember, .neb { animation: none; } .ember { display: none; } }
 
 /* ===== GLASS SURFACES ===== */
 .glass-card {
