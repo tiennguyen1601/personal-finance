@@ -1,5 +1,8 @@
 import { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 import Modal from '../components/Common/Modal';
+import { SkeletonGoalCard } from '../components/Common/Skeleton';
+import { EmptyState } from '../components/Common/EmptyState';
 import { savingsService } from '../services/savingsService';
 import type { SavingsGoal, CreateSavingsGoalDto, CreateSavingsEntryDto } from '../types';
 
@@ -88,14 +91,22 @@ function EntryForm({ goalName, onSubmit, onCancel }: {
   onSubmit: (dto: CreateSavingsEntryDto) => void;
   onCancel: () => void;
 }) {
-  const [amount, setAmount] = useState('');
+  const [amountRaw, setAmountRaw] = useState(0);
+  const [amountDisplay, setAmountDisplay] = useState('');
   const [note, setNote] = useState('');
   const [date, setDate] = useState(today());
 
+  const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const digits = e.target.value.replace(/\D/g, '');
+    const num = digits ? parseInt(digits, 10) : 0;
+    setAmountRaw(num);
+    setAmountDisplay(num ? new Intl.NumberFormat('vi-VN').format(num) : '');
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!amount || Number(amount) <= 0) return;
-    onSubmit({ amount: Number(amount), note: note || undefined, date });
+    if (!amountRaw || amountRaw <= 0) return;
+    onSubmit({ amount: amountRaw, note: note || undefined, date });
   };
 
   return (
@@ -103,7 +114,7 @@ function EntryForm({ goalName, onSubmit, onCancel }: {
       <p style={{ marginBottom: 16, color: 'var(--text-muted)', fontSize: 14 }}>Nạp tiền vào: <strong>{goalName}</strong></p>
       <div style={{ marginBottom: 14 }}>
         <label style={{ fontSize: 13, color: 'var(--text-muted)', display: 'block', marginBottom: 4 }}>Số tiền *</label>
-        <input className="glass-input" type="number" min="1" value={amount} onChange={e => setAmount(e.target.value)} placeholder="VD: 500000" required />
+        <input className="glass-input" type="text" inputMode="numeric" value={amountDisplay} onChange={handleAmountChange} placeholder="VD: 500.000" required />
       </div>
       <div style={{ marginBottom: 14 }}>
         <label style={{ fontSize: 13, color: 'var(--text-muted)', display: 'block', marginBottom: 4 }}>Ghi chú</label>
@@ -123,17 +134,24 @@ function EntryForm({ goalName, onSubmit, onCancel }: {
 
 export default function Savings() {
   const [goals, setGoals] = useState<SavingsGoal[]>([]);
+  const [loading, setLoading] = useState(true);
   const [showCreate, setShowCreate] = useState(false);
   const [editing, setEditing] = useState<SavingsGoal | null>(null);
   const [depositing, setDepositing] = useState<SavingsGoal | null>(null);
 
   const load = () => savingsService.getAll().then(setGoals);
-  useEffect(() => { load(); }, []);
+
+  useEffect(() => {
+    savingsService.getAll()
+      .then(setGoals)
+      .finally(() => setLoading(false));
+  }, []);
 
   const handleCreate = async (dto: CreateSavingsGoalDto) => {
     await savingsService.create(dto);
     setShowCreate(false);
     load();
+    toast.success('Đã tạo mục tiêu tiết kiệm');
   };
 
   const handleUpdate = async (dto: CreateSavingsGoalDto) => {
@@ -141,12 +159,14 @@ export default function Savings() {
     await savingsService.update(editing.id, dto);
     setEditing(null);
     load();
+    toast.success('Đã cập nhật mục tiêu');
   };
 
   const handleDelete = async (goal: SavingsGoal) => {
     if (!confirm(`Xóa mục tiêu "${goal.name}"? Tất cả lịch sử nạp tiền cũng sẽ bị xóa.`)) return;
     await savingsService.delete(goal.id);
     load();
+    toast.success(`Đã xóa "${goal.name}"`);
   };
 
   const handleDeposit = async (dto: CreateSavingsEntryDto) => {
@@ -154,6 +174,7 @@ export default function Savings() {
     await savingsService.addEntry(depositing.id, dto);
     setDepositing(null);
     load();
+    toast.success('Đã nạp tiền thành công 🎉');
   };
 
   const totalSaved = goals.reduce((s, g) => s + g.currentAmount, 0);
@@ -172,63 +193,80 @@ export default function Savings() {
         </button>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 16 }}>
-        {goals.map(goal => {
-          const pct = goal.targetAmount ? Math.min(100, Math.round(goal.currentAmount / goal.targetAmount * 100)) : null;
-          return (
-            <div key={goal.id} className="glass-card interactive" style={{ padding: 20, borderLeft: `4px solid ${goal.color}` }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12 }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                  <span style={{ fontSize: 28 }}>{goal.icon}</span>
-                  <div>
-                    <div style={{ fontWeight: 600, fontSize: 15, color: 'var(--text-strong)' }}>{goal.name}</div>
-                    {goal.deadline && (
-                      <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>
-                        Deadline: {new Date(goal.deadline).toLocaleDateString('vi-VN')}
-                      </div>
-                    )}
+      {loading ? (
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 16 }}>
+          {Array.from({ length: 3 }).map((_, i) => <SkeletonGoalCard key={i} />)}
+        </div>
+      ) : goals.length === 0 ? (
+        <EmptyState
+          icon="🐷"
+          title="Chưa có mục tiêu tiết kiệm"
+          description="Hãy tạo mục tiêu đầu tiên để theo dõi kế hoạch tiết kiệm của bạn!"
+          action={
+            <button onClick={() => setShowCreate(true)} className="glass-btn glass-btn-primary">
+              + Tạo mục tiêu
+            </button>
+          }
+        />
+      ) : (
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 16 }}>
+          {goals.map(goal => {
+            const pct = goal.targetAmount ? Math.min(100, Math.round(goal.currentAmount / goal.targetAmount * 100)) : null;
+            return (
+              <div key={goal.id} className="glass-card interactive" style={{ padding: 20, borderLeft: `4px solid ${goal.color}` }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                    <span style={{ fontSize: 28 }}>{goal.icon}</span>
+                    <div>
+                      <div style={{ fontWeight: 600, fontSize: 15, color: 'var(--text-strong)' }}>{goal.name}</div>
+                      {goal.deadline && (
+                        <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>
+                          Deadline: {new Date(goal.deadline).toLocaleDateString('vi-VN')}
+                        </div>
+                      )}
+                    </div>
                   </div>
+                  {goal.isCompleted && (
+                    <span className="chip" style={{ color: 'var(--income)' }}>
+                      Hoàn thành 🎉
+                    </span>
+                  )}
                 </div>
-                {goal.isCompleted && (
-                  <span className="chip" style={{ color: 'var(--income)' }}>
-                    Hoàn thành 🎉
-                  </span>
-                )}
-              </div>
 
-              <div style={{ marginBottom: 12 }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, marginBottom: 6 }}>
-                  <span style={{ color: 'var(--text-muted)' }}>Đã tiết kiệm</span>
-                  <span style={{ fontWeight: 600, color: goal.color }}>{fmt(goal.currentAmount)}</span>
+                <div style={{ marginBottom: 12 }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, marginBottom: 6 }}>
+                    <span style={{ color: 'var(--text-muted)' }}>Đã tiết kiệm</span>
+                    <span style={{ fontWeight: 600, color: goal.color }}>{fmt(goal.currentAmount)}</span>
+                  </div>
+                  {goal.targetAmount && (
+                    <>
+                      <div style={{ background: 'rgba(148,163,184,0.25)', borderRadius: 999, height: 10, overflow: 'hidden' }}>
+                        <div style={{ width: `${pct}%`, height: '100%', background: 'var(--accent-grad)', borderRadius: 999, transition: 'width 0.6s ease' }} />
+                      </div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, color: 'var(--text-muted)', marginTop: 4 }}>
+                        <span>{pct}%</span>
+                        <span>Mục tiêu: {fmt(goal.targetAmount)}</span>
+                      </div>
+                    </>
+                  )}
                 </div>
-                {goal.targetAmount && (
-                  <>
-                    <div style={{ background: 'rgba(148,163,184,0.25)', borderRadius: 999, height: 10, overflow: 'hidden' }}>
-                      <div style={{ width: `${pct}%`, height: '100%', background: 'var(--accent-grad)', borderRadius: 999, transition: 'width 0.6s ease' }} />
-                    </div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, color: 'var(--text-muted)', marginTop: 4 }}>
-                      <span>{pct}%</span>
-                      <span>Mục tiêu: {fmt(goal.targetAmount)}</span>
-                    </div>
-                  </>
-                )}
-              </div>
 
-              <div style={{ display: 'flex', gap: 8 }}>
-                <button onClick={() => setDepositing(goal)} className="glass-btn glass-btn-primary" style={{ flex: 1, fontSize: 13, padding: '8px 0' }}>
-                  + Nạp tiền
-                </button>
-                {!goal.isDefault && (
-                  <>
-                    <button onClick={() => setEditing(goal)} className="glass-btn" style={{ fontSize: 13, padding: '8px 12px' }}>Sửa</button>
-                    <button onClick={() => handleDelete(goal)} className="glass-btn glass-btn-danger" style={{ fontSize: 13, padding: '8px 12px' }}>Xóa</button>
-                  </>
-                )}
+                <div style={{ display: 'flex', gap: 8 }}>
+                  <button onClick={() => setDepositing(goal)} className="glass-btn glass-btn-primary" style={{ flex: 1, fontSize: 13, padding: '8px 0' }}>
+                    + Nạp tiền
+                  </button>
+                  {!goal.isDefault && (
+                    <>
+                      <button onClick={() => setEditing(goal)} className="glass-btn" style={{ fontSize: 13, padding: '8px 12px' }}>Sửa</button>
+                      <button onClick={() => handleDelete(goal)} className="glass-btn glass-btn-danger" style={{ fontSize: 13, padding: '8px 12px' }}>Xóa</button>
+                    </>
+                  )}
+                </div>
               </div>
-            </div>
-          );
-        })}
-      </div>
+            );
+          })}
+        </div>
+      )}
 
       {showCreate && (
         <Modal title="Tạo mục tiêu tiết kiệm" onClose={() => setShowCreate(false)}>

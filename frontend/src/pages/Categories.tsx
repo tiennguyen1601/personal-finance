@@ -1,5 +1,8 @@
 import { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 import Modal from '../components/Common/Modal';
+import { Skeleton } from '../components/Common/Skeleton';
+import { EmptyState } from '../components/Common/EmptyState';
 import { categoryService } from '../services/categoryService';
 import { useAppStore } from '../store/appStore';
 import type { Category, CreateCategoryDto, TransactionType } from '../types';
@@ -7,8 +10,26 @@ import type { Category, CreateCategoryDto, TransactionType } from '../types';
 const ICONS = ['🍔','🚗','🎮','🛍️','💊','📄','💰','🎁','📈','💡','✈️','🏠','📚','🎵','🏋️','☕','🎂','🐶'];
 const COLORS = ['#ef4444','#f97316','#eab308','#22c55e','#14b8a6','#3b82f6','#a855f7','#ec4899','#64748b','#78716c'];
 
+function SkeletonCategoryGrid() {
+  return (
+    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: 12 }}>
+      {Array.from({ length: 6 }).map((_, i) => (
+        <div key={i} className="glass-card" style={{ padding: 16, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
+          <Skeleton width={56} height={56} borderRadius={28} />
+          <Skeleton height={15} style={{ width: '70%' }} />
+          <div style={{ display: 'flex', gap: 6 }}>
+            <Skeleton width={50} height={28} borderRadius={10} />
+            <Skeleton width={50} height={28} borderRadius={10} />
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export default function Categories() {
   const { categories, setCategories } = useAppStore();
+  const [pageLoading, setPageLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [editing, setEditing] = useState<Category | null>(null);
   const [name, setName] = useState('');
@@ -18,7 +39,12 @@ export default function Categories() {
   const [loading, setLoading] = useState(false);
 
   const load = () => categoryService.getAll().then(setCategories);
-  useEffect(() => { load(); }, []);
+
+  useEffect(() => {
+    categoryService.getAll()
+      .then(setCategories)
+      .finally(() => setPageLoading(false));
+  }, []);
 
   const openCreate = () => {
     setEditing(null); setName(''); setIcon('💡'); setColor('#3b82f6'); setType('Expense');
@@ -33,8 +59,13 @@ export default function Categories() {
     e.preventDefault();
     setLoading(true);
     const dto: CreateCategoryDto = { name, icon, color, type };
-    if (editing) await categoryService.update(editing.id, dto);
-    else await categoryService.create(dto);
+    if (editing) {
+      await categoryService.update(editing.id, dto);
+      toast.success('Đã cập nhật danh mục');
+    } else {
+      await categoryService.create(dto);
+      toast.success('Đã thêm danh mục');
+    }
     setShowModal(false);
     await load();
     setLoading(false);
@@ -45,33 +76,40 @@ export default function Categories() {
     try {
       await categoryService.delete(id);
       await load();
+      toast.success('Đã xóa danh mục');
     } catch (err: any) {
-      alert(err?.message ?? 'Không thể xóa.');
+      toast.error(err?.message ?? 'Không thể xóa danh mục này');
     }
   };
 
   const expense = categories.filter(c => c.type === 'Expense');
   const income = categories.filter(c => c.type === 'Income');
 
-  const renderGroup = (title: string, items: Category[]) => (
+  const renderGroup = (title: string, items: Category[], emptyMsg: string) => (
     <div style={{ marginBottom: 32 }}>
       <h3 style={{ fontSize: 16, margin: '0 0 16px', color: 'var(--text-strong)' }}>{title}</h3>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: 12 }}>
-        {items.map(c => (
-          <div key={c.id} className="glass-card interactive" style={{ padding: 16, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
-            <div style={{ width: 56, height: 56, borderRadius: '50%', background: c.color + '22', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 28 }}>{c.icon}</div>
-            <div style={{ fontSize: 15, fontWeight: 600, textAlign: 'center', color: 'var(--text-strong)' }}>{c.name}</div>
-            {!c.isDefault ? (
-              <div style={{ display: 'flex', gap: 6 }}>
-                <button onClick={() => openEdit(c)} className="glass-btn" style={{ fontSize: 12, padding: '4px 10px' }}>Sửa</button>
-                <button onClick={() => handleDelete(c.id)} className="glass-btn glass-btn-danger" style={{ fontSize: 12, padding: '4px 10px' }}>Xóa</button>
-              </div>
-            ) : (
-              <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>Mặc định</span>
-            )}
-          </div>
-        ))}
-      </div>
+      {pageLoading ? (
+        <SkeletonCategoryGrid />
+      ) : items.length === 0 ? (
+        <EmptyState icon="🏷️" title={emptyMsg} description="Nhấn '+ Thêm danh mục' để tạo mới" />
+      ) : (
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: 12 }}>
+          {items.map(c => (
+            <div key={c.id} className="glass-card interactive" style={{ padding: 16, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
+              <div style={{ width: 56, height: 56, borderRadius: '50%', background: c.color + '22', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 28 }}>{c.icon}</div>
+              <div style={{ fontSize: 15, fontWeight: 600, textAlign: 'center', color: 'var(--text-strong)' }}>{c.name}</div>
+              {!c.isDefault ? (
+                <div style={{ display: 'flex', gap: 6 }}>
+                  <button onClick={() => openEdit(c)} className="glass-btn" style={{ fontSize: 12, padding: '4px 10px' }}>Sửa</button>
+                  <button onClick={() => handleDelete(c.id)} className="glass-btn glass-btn-danger" style={{ fontSize: 12, padding: '4px 10px' }}>Xóa</button>
+                </div>
+              ) : (
+                <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>Mặc định</span>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 
@@ -85,8 +123,8 @@ export default function Categories() {
         </button>
       </div>
 
-      {renderGroup('Chi tiêu', expense)}
-      {renderGroup('Thu nhập', income)}
+      {renderGroup('Chi tiêu', expense, 'Chưa có danh mục chi tiêu')}
+      {renderGroup('Thu nhập', income, 'Chưa có danh mục thu nhập')}
 
       {showModal && (
         <Modal title={editing ? 'Sửa danh mục' : 'Thêm danh mục'} onClose={() => setShowModal(false)}>
