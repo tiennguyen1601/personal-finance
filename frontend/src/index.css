@@ -1,99 +1,96 @@
 :root {
-  /* Light theme tokens */
-  --text: #4b5563;
-  --text-muted: #94a3b8;
-  --text-strong: #0f172a;
-
-  --accent: #7c3aed;
-  --accent-2: #2563eb;
-  --accent-grad: linear-gradient(135deg, #7c3aed 0%, #2563eb 100%);
-
-  --glass-bg: rgba(255, 255, 255, 0.55);
-  --glass-bg-strong: rgba(255, 255, 255, 0.75);
-  --glass-border: rgba(255, 255, 255, 0.6);
-  --glass-shadow: 0 8px 32px rgba(31, 38, 135, 0.12), 0 2px 8px rgba(31, 38, 135, 0.06);
-  --blur: 18px;
-
-  --income: #16a34a;
-  --expense: #dc2626;
-  --saving: #7c3aed;
-  --balance: #2563eb;
-
   --radius: 18px;
   --radius-sm: 12px;
-
-  --page-bg: #eef1f9;
-  --blob-1: rgba(124, 58, 237, 0.45);
-  --blob-2: rgba(37, 99, 235, 0.40);
-  --blob-3: rgba(236, 72, 153, 0.32);
-
-  --sidebar-bg: rgba(30, 41, 59, 0.72);
-  --sidebar-text: #e2e8f0;
-  --sidebar-muted: #94a3b8;
-
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  font: 16px/1.5 var(--sans);
-  color: var(--text);
+  --blur: 14px;
   color-scheme: light dark;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
 }
 
-/* Dark via explicit toggle */
-:root[data-theme='dark'] {
-  --text: #cbd5e1;
-  --text-muted: #94a3b8;
-  --text-strong: #f1f5f9;
-
-  --accent: #c084fc;
-  --accent-2: #60a5fa;
-  --accent-grad: linear-gradient(135deg, #c084fc 0%, #60a5fa 100%);
-
-  --glass-bg: rgba(30, 32, 48, 0.55);
-  --glass-bg-strong: rgba(30, 32, 48, 0.78);
-  --glass-border: rgba(148, 163, 184, 0.22);
-  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.45), 0 2px 8px rgba(0, 0, 0, 0.30);
-  --blur: 18px;
-
-  --income: #4ade80;
-  --expense: #f87171;
-  --saving: #c084fc;
-  --balance: #60a5fa;
-
-  --page-bg: #0b1020;
-  --blob-1: rgba(124, 58, 237, 0.55);
-  --blob-2: rgba(37, 99, 235, 0.50);
-  --blob-3: rgba(236, 72, 153, 0.38);
-
-  --sidebar-bg: rgba(15, 18, 32, 0.70);
-  --sidebar-text: #e2e8f0;
-  --sidebar-muted: #94a3b8;
+/* ===== CẤU TRÚC THEO SKIN ===== */
+:root[data-skin='manga'] {
+  --radius: 3px;
+  --radius-sm: 2px;
+  --bw: 2.5px;
+  --body-font: 'Be Vietnam Pro', system-ui, sans-serif;
+  --display-font: 'Oswald', 'Be Vietnam Pro', sans-serif;
+  --glow: none;
+}
+:root[data-skin='anime'] {
+  --radius: 20px;
+  --radius-sm: 13px;
+  --bw: 1px;
+  --body-font: 'Be Vietnam Pro', system-ui, sans-serif;
+  --display-font: 'Playfair Display', Georgia, serif;
+  --glow: 0 0 24px var(--accent-glow);
 }
 
-/* Dark via system preference (only when user has NOT chosen explicitly) */
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme]) {
-    --text: #cbd5e1;
-    --text-muted: #94a3b8;
-    --text-strong: #f1f5f9;
-    --accent: #c084fc;
-    --accent-2: #60a5fa;
-    --accent-grad: linear-gradient(135deg, #c084fc 0%, #60a5fa 100%);
-    --glass-bg: rgba(30, 32, 48, 0.55);
-    --glass-bg-strong: rgba(30, 32, 48, 0.78);
-    --glass-border: rgba(148, 163, 184, 0.22);
-    --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.45), 0 2px 8px rgba(0, 0, 0, 0.30);
-    --income: #4ade80;
-    --expense: #f87171;
-    --saving: #c084fc;
-    --balance: #60a5fa;
-    --page-bg: #0b1020;
-    --blob-1: rgba(124, 58, 237, 0.55);
-    --blob-2: rgba(37, 99, 235, 0.50);
-    --blob-3: rgba(236, 72, 153, 0.38);
-    --sidebar-bg: rgba(15, 18, 32, 0.70);
-  }
+/* ===== PALETTE 4 KIỂU ===== */
+/* Manga – Sáng */
+:root[data-skin='manga'][data-mode='light'] {
+  --page-bg: #ece5d4; --page2: #e3dac4;
+  --text: #3a342a; --text-muted: #6b6151; --text-strong: #211d16;
+  --accent: #b3121b; --accent-2: #6d28d9; --accent-glow: transparent;
+  --accent-grad: linear-gradient(135deg, #b3121b 0%, #6d28d9 100%);
+  --arcane: #6d28d9; --ornament: #9a6a07;
+  --income: #1f7a3d; --expense: #b3121b; --saving: #6d28d9; --balance: #9a6a07;
+  --glass-bg: rgba(246,241,228,0.7); --glass-bg-strong: #f6f1e4;
+  --glass-border: #1a1610; --glass-shadow: 4px 4px 0 #1a1610;
+  --surface-shadow: 4px 4px 0 #1a1610;
+  --halftone: rgba(26,22,16,0.14);
+  --sidebar-bg: #f6f1e4; --sidebar-text: #211d16; --sidebar-muted: #6b6151;
+  --blob-1: transparent; --blob-2: transparent; --blob-3: transparent;
+}
+/* Manga – Tối */
+:root[data-skin='manga'][data-mode='dark'] {
+  --page-bg: #08080c; --page2: #0d0d13;
+  --text: #cfc8b5; --text-muted: #8f8775; --text-strong: #ece4cf;
+  --accent: #ef3b3b; --accent-2: #b07cf5; --accent-glow: rgba(239,59,59,0.35);
+  --accent-grad: linear-gradient(135deg, #ef3b3b 0%, #b07cf5 100%);
+  --arcane: #b07cf5; --ornament: #f5c451;
+  --income: #52d27f; --expense: #ff6b6b; --saving: #b07cf5; --balance: #f5c451;
+  --glass-bg: rgba(19,19,27,0.7); --glass-bg-strong: #13131b;
+  --glass-border: #c9bea4; --glass-shadow: 4px 4px 0 #000;
+  --surface-shadow: 4px 4px 0 #000;
+  --halftone: rgba(236,228,207,0.10);
+  --sidebar-bg: #13131b; --sidebar-text: #ece4cf; --sidebar-muted: #8f8775;
+  --blob-1: transparent; --blob-2: transparent; --blob-3: transparent;
+}
+/* Anime – Sáng */
+:root[data-skin='anime'][data-mode='light'] {
+  --page-bg: #ece7f6; --page2: #e6def4;
+  --text: #4a3b78; --text-muted: #6c5b9c; --text-strong: #2c1065;
+  --accent: #7c3aed; --accent-2: #d61f4e; --accent-glow: rgba(124,58,237,0.30);
+  --accent-grad: linear-gradient(135deg, #7c3aed 0%, #d61f4e 100%);
+  --arcane: #7c3aed; --ornament: #c2790a;
+  --income: #0a8a5f; --expense: #d61f4e; --saving: #7c3aed; --balance: #c2790a;
+  --glass-bg: rgba(255,255,255,0.72); --glass-bg-strong: rgba(255,255,255,0.85);
+  --glass-border: rgba(124,58,237,0.22); --glass-shadow: 0 18px 50px rgba(80,40,160,0.18);
+  --surface-shadow: 0 18px 50px rgba(80,40,160,0.18);
+  --halftone: transparent;
+  --sidebar-bg: rgba(255,255,255,0.8); --sidebar-text: #2c1065; --sidebar-muted: #6c5b9c;
+  --blob-1: rgba(124,58,237,0.30); --blob-2: rgba(214,31,78,0.16); --blob-3: rgba(124,58,237,0.16);
+}
+/* Anime – Tối ⭐ */
+:root[data-skin='anime'][data-mode='dark'] {
+  --page-bg: #0a0612; --page2: #120a20;
+  --text: #cfc4e8; --text-muted: #a294c9; --text-strong: #ece7ff;
+  --accent: #a855f7; --accent-2: #fb6f8a; --accent-glow: rgba(168,85,247,0.45);
+  --accent-grad: linear-gradient(135deg, #a855f7 0%, #fb6f8a 100%);
+  --arcane: #c084fc; --ornament: #fbbf24;
+  --income: #34d399; --expense: #fb6f8a; --saving: #c084fc; --balance: #fbbf24;
+  --glass-bg: rgba(32,21,54,0.55); --glass-bg-strong: rgba(32,21,54,0.7);
+  --glass-border: rgba(168,85,247,0.32); --glass-shadow: 0 18px 50px rgba(0,0,0,0.5);
+  --surface-shadow: 0 18px 50px rgba(0,0,0,0.5);
+  --halftone: transparent;
+  --sidebar-bg: rgba(18,10,32,0.7); --sidebar-text: #ece7ff; --sidebar-muted: #a294c9;
+  --blob-1: rgba(168,85,247,0.40); --blob-2: rgba(251,111,138,0.18); --blob-3: rgba(192,132,252,0.16);
+}
+
+body {
+  font: 16px/1.5 var(--body-font);
+  color: var(--text);
 }
 
 #root {
@@ -106,9 +103,10 @@
 
 body {
   margin: 0;
-  background: var(--page-bg);
   color: var(--text);
   min-height: 100vh;
+  background:
+    radial-gradient(120% 80% at 50% 0%, var(--page2) 0%, var(--page-bg) 60%) fixed;
 }
 
 /* ===== RESPONSIVE LAYOUT ===== */
@@ -122,8 +120,8 @@ body {
 .sidebar {
   width: 220px;
   min-height: 100vh;
-  background: #1e293b;
-  color: white;
+  background: var(--sidebar-bg);
+  color: var(--sidebar-text);
   display: flex;
   flex-direction: column;
   padding: 20px 0;
@@ -145,10 +143,10 @@ body {
   top: 12px;
   left: 12px;
   z-index: 300;
-  background: #1e293b;
-  color: white;
-  border: none;
-  border-radius: 8px;
+  background: var(--accent);
+  color: #fff;
+  border: var(--bw) solid var(--glass-border);
+  border-radius: var(--radius-sm);
   width: 40px;
   height: 40px;
   font-size: 20px;
@@ -244,91 +242,70 @@ body {
   }
 }
 
-h1,
-h2 {
-  font-family: var(--heading);
-  font-weight: 500;
-  color: var(--text-h);
+h1, h2, h3 { font-family: var(--display-font); color: var(--text-strong); margin: 0; }
+h1 { font-size: 40px; font-weight: 800; letter-spacing: 0.5px; line-height: 1.05; margin: 8px 0 4px; }
+h2 { font-size: 26px; font-weight: 700; letter-spacing: 0.3px; }
+h3 { font-size: 17px; font-weight: 700; }
+:root[data-skin='manga'] h1,
+:root[data-skin='manga'] h2,
+:root[data-skin='manga'] h3 { text-transform: uppercase; letter-spacing: 1px; }
+@media (max-width: 1024px) { h1 { font-size: 30px; } h2 { font-size: 21px; } }
+p { margin: 0; }
+
+/* ===== BACKDROP ===== */
+.backdrop { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
+
+/* manga: halftone phủ + speed-lines góc */
+:root[data-skin='manga'] .backdrop {
+  background-image: radial-gradient(var(--halftone) 1.4px, transparent 1.6px);
+  background-size: 9px 9px;
+}
+.speedlines {
+  position: absolute; top: -20%; right: -10%; width: 60%; height: 70%;
+  background: repeating-linear-gradient(115deg, var(--halftone) 0 2px, transparent 2px 13px);
+  transform: skewX(-12deg); opacity: 0.5;
 }
 
-h1 {
-  font-size: 56px;
-  letter-spacing: -1.68px;
-  margin: 32px 0;
-  @media (max-width: 1024px) {
-    font-size: 36px;
-    margin: 20px 0;
-  }
+/* anime: tinh vân + tro lửa */
+.neb { position: absolute; border-radius: 50%; filter: blur(70px); }
+.neb.a { width: 46vmax; height: 46vmax; top: -12vmax; left: -8vmax; background: var(--blob-1); animation: drift1 22s ease-in-out infinite; }
+.neb.b { width: 40vmax; height: 40vmax; bottom: -14vmax; right: -6vmax; background: var(--blob-2); animation: drift2 26s ease-in-out infinite; }
+.neb.c { width: 30vmax; height: 30vmax; top: 35vmax; left: 40vw; background: var(--blob-3); animation: drift3 30s ease-in-out infinite; }
+.embers { position: absolute; inset: 0; }
+.ember {
+  position: absolute; bottom: -10px; border-radius: 50%;
+  background: var(--ornament); box-shadow: 0 0 8px var(--ornament);
+  opacity: 0; animation: rise linear infinite;
 }
-h2 {
-  font-size: 24px;
-  line-height: 118%;
-  letter-spacing: -0.24px;
-  margin: 0 0 8px;
-  @media (max-width: 1024px) {
-    font-size: 20px;
-  }
+@keyframes rise {
+  0% { transform: translateY(0) scale(1); opacity: 0; }
+  10% { opacity: 0.9; }
+  100% { transform: translateY(-105vh) scale(0.4); opacity: 0; }
 }
-p {
-  margin: 0;
-}
-
-code,
-.counter {
-  font-family: var(--mono);
-  display: inline-flex;
-  border-radius: 4px;
-  color: var(--text-h);
-}
-
-code {
-  font-size: 15px;
-  line-height: 135%;
-  padding: 4px 8px;
-  background: var(--code-bg);
-}
-
-/* ===== AURORA BACKGROUND ===== */
-.aurora {
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  overflow: hidden;
-  pointer-events: none;
-}
-.aurora span {
-  position: absolute;
-  display: block;
-  width: 45vmax;
-  height: 45vmax;
-  border-radius: 50%;
-  filter: blur(80px);
-  opacity: 0.85;
-}
-.aurora .b1 { background: var(--blob-1); top: -10vmax; left: -8vmax; animation: drift1 22s ease-in-out infinite; }
-.aurora .b2 { background: var(--blob-2); bottom: -12vmax; right: -6vmax; animation: drift2 26s ease-in-out infinite; }
-.aurora .b3 { background: var(--blob-3); top: 30vmax; left: 40vw; animation: drift3 30s ease-in-out infinite; }
-
 @keyframes drift1 { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(8vmax,6vmax) scale(1.15); } }
 @keyframes drift2 { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(-7vmax,-5vmax) scale(1.1); } }
 @keyframes drift3 { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(-6vmax,4vmax) scale(1.2); } }
+@media (prefers-reduced-motion: reduce) { .ember, .neb { animation: none; } .ember { display: none; } }
 
 /* ===== GLASS SURFACES ===== */
 .glass-card {
   background: var(--glass-bg);
   -webkit-backdrop-filter: blur(var(--blur));
   backdrop-filter: blur(var(--blur));
-  border: 1px solid var(--glass-border);
+  border: var(--bw) solid var(--glass-border);
   border-radius: var(--radius);
-  box-shadow: var(--glass-shadow);
+  box-shadow: var(--surface-shadow);
 }
 .glass-card.interactive {
   transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 }
-.glass-card.interactive:hover {
+:root[data-skin='anime'] .glass-card.interactive:hover {
   transform: translateY(-4px);
-  border-color: var(--accent);
-  box-shadow: 0 14px 40px rgba(31, 38, 135, 0.22);
+  box-shadow: var(--surface-shadow), var(--glow);
+}
+:root[data-skin='manga'] .glass-card.interactive:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 var(--glass-border);
 }
 
 /* ===== BUTTONS ===== */
@@ -338,22 +315,22 @@ code {
   border-radius: var(--radius-sm);
   padding: 10px 18px;
   cursor: pointer;
-  border: 1px solid var(--glass-border);
+  border: var(--bw) solid var(--glass-border);
   background: var(--glass-bg-strong);
   color: var(--text-strong);
   transition: transform 0.15s ease, box-shadow 0.2s ease, filter 0.2s ease;
 }
-.glass-btn:hover { transform: translateY(-2px); box-shadow: var(--glass-shadow); }
+.glass-btn:hover { transform: translateY(-2px); box-shadow: var(--surface-shadow); }
 .glass-btn:active { transform: translateY(0); }
 .glass-btn:disabled { opacity: 0.6; cursor: not-allowed; }
 .glass-btn-primary {
   background: var(--accent-grad);
   color: #fff;
   border: none;
-  box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);
+  box-shadow: var(--glow);
 }
-.glass-btn-primary:hover { filter: brightness(1.08); box-shadow: 0 10px 28px rgba(124, 58, 237, 0.5); }
-.glass-btn-danger { background: rgba(220, 38, 38, 0.9); color: #fff; border: none; }
+.glass-btn-primary:hover { filter: brightness(1.08); }
+.glass-btn-danger { background: var(--expense); color: #fff; border: none; }
 .glass-btn-danger:hover { filter: brightness(1.08); }
 
 /* ===== INPUTS ===== */
@@ -363,7 +340,7 @@ code {
   font: inherit;
   padding: 10px 12px;
   border-radius: var(--radius-sm);
-  border: 1px solid var(--glass-border);
+  border: var(--bw) solid var(--glass-border);
   background: var(--glass-bg-strong);
   color: var(--text-strong);
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
@@ -371,7 +348,7 @@ code {
 .glass-input:focus, .glass-select:focus {
   outline: none;
   border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.25);
+  box-shadow: 0 0 0 3px var(--accent-glow);
 }
 .glass-input::placeholder { color: var(--text-muted); }
 
@@ -385,7 +362,7 @@ code {
   font-size: 12px;
   font-weight: 600;
   background: var(--glass-bg-strong);
-  border: 1px solid var(--glass-border);
+  border: var(--bw) solid var(--glass-border);
 }
 
 /* ===== ANIMATIONS ===== */
@@ -423,18 +400,22 @@ code {
 .nav-item.active {
   background: var(--accent-grad);
   color: #fff;
-  box-shadow: 0 6px 18px rgba(124, 58, 237, 0.4);
+  box-shadow: var(--glow);
 }
-.theme-toggle {
-  display: flex; align-items: center; gap: 8px;
-  width: 100%; margin-bottom: 12px;
-  padding: 8px 12px; border-radius: var(--radius-sm);
-  background: rgba(255,255,255,0.08);
-  border: 1px solid var(--glass-border);
-  color: var(--sidebar-text); cursor: pointer; font: inherit; font-size: 13px;
-  transition: background 0.2s ease;
+:root[data-skin='manga'] .nav-item.active { box-shadow: 3px 3px 0 var(--glass-border); }
+
+.theme-switch { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
+.seg {
+  display: flex; border: var(--bw) solid var(--glass-border);
+  border-radius: var(--radius-sm); overflow: hidden; background: var(--glass-bg-strong);
 }
-.theme-toggle:hover { background: rgba(255,255,255,0.16); }
+.seg button {
+  flex: 1; font: inherit; font-size: 12.5px; font-weight: 700;
+  padding: 8px 10px; border: none; cursor: pointer;
+  background: transparent; color: var(--sidebar-muted); transition: all 0.15s ease;
+}
+.seg button.on { background: var(--accent); color: #fff; }
+:root[data-skin='anime'] .seg button.on { background: var(--accent-grad); }
 
 /* ===== SKELETON LOADER ===== */
 .skeleton {
@@ -455,3 +436,11 @@ code {
   0%   { transform: translateX(-100%); }
   100% { transform: translateX(100%); }
 }
+
+/* ===== STAT CARD ===== */
+.stat-card { padding: 18px 20px; position: relative; overflow: hidden; }
+:root[data-skin='manga'] .stat-card { border-left: 6px solid var(--role); }
+.stat-tag { font-size: 12px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.6px; }
+.stat-val { font-family: var(--display-font); font-size: 27px; font-weight: 700; margin-top: 8px; color: var(--role); }
+:root[data-skin='anime'] .stat-val { text-shadow: 0 0 18px var(--accent-glow); }
+.stat-rune { position: absolute; right: 12px; top: 10px; font-size: 30px; opacity: 0.16; }

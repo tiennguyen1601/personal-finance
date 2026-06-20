@@ -49,7 +49,7 @@ function GoalForm({ initial, onSubmit, onCancel }: {
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
           {ICONS.map(i => (
             <button key={i} type="button" onClick={() => setIcon(i)}
-              style={{ width: 36, height: 36, fontSize: 18, border: '2px solid', borderColor: icon === i ? '#3b82f6' : '#e2e8f0', borderRadius: 8, cursor: 'pointer', background: icon === i ? '#eff6ff' : 'white' }}>
+              style={{ width: 36, height: 36, fontSize: 18, border: 'var(--bw) solid', borderColor: icon === i ? 'var(--accent)' : 'var(--glass-border)', borderRadius: 'var(--radius-sm)', cursor: 'pointer', color: 'var(--text-strong)', background: icon === i ? 'var(--accent-glow)' : 'var(--glass-bg-strong)' }}>
               {i}
             </button>
           ))}
@@ -61,7 +61,7 @@ function GoalForm({ initial, onSubmit, onCancel }: {
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
           {COLORS.map(c => (
             <button key={c} type="button" onClick={() => setColor(c)}
-              style={{ width: 28, height: 28, borderRadius: '50%', background: c, border: color === c ? '3px solid #1e293b' : '2px solid transparent', cursor: 'pointer' }} />
+              style={{ width: 28, height: 28, borderRadius: '50%', background: c, border: color === c ? '3px solid var(--text-strong)' : '2px solid transparent', cursor: 'pointer' }} />
           ))}
         </div>
       </div>
@@ -240,8 +240,8 @@ export default function Savings() {
                   </div>
                   {goal.targetAmount && (
                     <>
-                      <div style={{ background: 'rgba(148,163,184,0.25)', borderRadius: 999, height: 10, overflow: 'hidden' }}>
-                        <div style={{ width: `${pct}%`, height: '100%', background: 'var(--accent-grad)', borderRadius: 999, transition: 'width 0.6s ease' }} />
+                      <div style={{ background: 'var(--glass-bg-strong)', border: 'var(--bw) solid var(--glass-border)', borderRadius: 999, height: 12, overflow: 'hidden' }}>
+                        <div style={{ width: `${pct}%`, height: '100%', background: 'linear-gradient(90deg, var(--saving), var(--ornament))', borderRadius: 999, boxShadow: 'var(--glow)', transition: 'width 0.6s ease' }} />
                       </div>
                       <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, color: 'var(--text-muted)', marginTop: 4 }}>
                         <span>{pct}%</span>

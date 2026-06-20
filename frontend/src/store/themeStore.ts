@@ -1,37 +1,45 @@
 import { create } from 'zustand';
 
-export type Theme = 'system' | 'light' | 'dark';
+export type Skin = 'manga' | 'anime';
+export type Mode = 'light' | 'dark';
 
-const STORAGE_KEY = 'theme';
+const SKIN_KEY = 'app-skin';
+const MODE_KEY = 'app-mode';
 
-function readStored(): Theme {
-  const v = localStorage.getItem(STORAGE_KEY);
-  return v === 'light' || v === 'dark' || v === 'system' ? v : 'system';
+function readSkin(): Skin {
+  const v = localStorage.getItem(SKIN_KEY);
+  return v === 'manga' || v === 'anime' ? v : 'anime'; // mặc định Anime
+}
+function readMode(): Mode {
+  const v = localStorage.getItem(MODE_KEY);
+  return v === 'light' || v === 'dark' ? v : 'dark'; // mặc định Tối
 }
 
-/** Gắn/gỡ data-theme trên <html> theo lựa chọn. system => gỡ thuộc tính. */
-export function applyTheme(theme: Theme) {
+/** Gắn data-skin và data-mode lên <html>. */
+export function applyTheme(skin: Skin, mode: Mode) {
   const root = document.documentElement;
-  if (theme === 'system') root.removeAttribute('data-theme');
-  else root.setAttribute('data-theme', theme);
+  root.setAttribute('data-skin', skin);
+  root.setAttribute('data-mode', mode);
 }
 
 interface ThemeState {
-  theme: Theme;
-  setTheme: (t: Theme) => void;
-  cycleTheme: () => void;
+  skin: Skin;
+  mode: Mode;
+  setSkin: (s: Skin) => void;
+  setMode: (m: Mode) => void;
 }
 
 export const useThemeStore = create<ThemeState>((set, get) => ({
-  theme: readStored(),
-  setTheme: (t) => {
-    localStorage.setItem(STORAGE_KEY, t);
-    applyTheme(t);
-    set({ theme: t });
+  skin: readSkin(),
+  mode: readMode(),
+  setSkin: (s) => {
+    localStorage.setItem(SKIN_KEY, s);
+    applyTheme(s, get().mode);
+    set({ skin: s });
   },
-  cycleTheme: () => {
-    const order: Theme[] = ['system', 'light', 'dark'];
-    const next = order[(order.indexOf(get().theme) + 1) % order.length];
-    get().setTheme(next);
+  setMode: (m) => {
+    localStorage.setItem(MODE_KEY, m);
+    applyTheme(get().skin, m);
+    set({ mode: m });
   },
 }));

@@ -81,13 +81,13 @@ export default function Statistics() {
           <h3 style={{ margin: '0 0 20px', fontSize: 16 }}>Thu/Chi theo tháng — {year}</h3>
           <ResponsiveContainer width="100%" height={280}>
             <BarChart data={barData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(148,163,184,0.2)" />
+              <CartesianGrid strokeDasharray="3 3" stroke="var(--glass-border)" strokeOpacity={0.25} />
               <XAxis dataKey="name" tick={{ fontSize: 12 }} />
               <YAxis tick={{ fontSize: 12 }} tickFormatter={v => `${(v/1000000).toFixed(0)}M`} />
               <Tooltip formatter={(v: any) => fmt(v as number)} />
               <Legend />
-              <Bar dataKey="Thu nhập" fill="#22c55e" radius={[4, 4, 0, 0]} />
-              <Bar dataKey="Chi tiêu" fill="#ef4444" radius={[4, 4, 0, 0]} />
+              <Bar dataKey="Thu nhập" fill="var(--income)" radius={[4, 4, 0, 0]} />
+              <Bar dataKey="Chi tiêu" fill="var(--expense)" radius={[4, 4, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>

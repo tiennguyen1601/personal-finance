@@ -138,7 +138,7 @@ export default function Categories() {
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
                 {ICONS.map(i => (
                   <button key={i} type="button" onClick={() => setIcon(i)}
-                    style={{ width: 36, height: 36, border: '2px solid', borderColor: icon === i ? '#3b82f6' : '#e2e8f0', borderRadius: 8, fontSize: 18, cursor: 'pointer', background: icon === i ? '#eff6ff' : 'white' }}>
+                    style={{ width: 36, height: 36, border: 'var(--bw) solid', borderColor: icon === i ? 'var(--accent)' : 'var(--glass-border)', borderRadius: 'var(--radius-sm)', fontSize: 18, cursor: 'pointer', color: 'var(--text-strong)', background: icon === i ? 'var(--accent-glow)' : 'var(--glass-bg-strong)' }}>
                     {i}
                   </button>
                 ))}
@@ -149,7 +149,7 @@ export default function Categories() {
               <div style={{ display: 'flex', gap: 8 }}>
                 {COLORS.map(c => (
                   <button key={c} type="button" onClick={() => setColor(c)}
-                    style={{ width: 28, height: 28, borderRadius: '50%', background: c, border: color === c ? '3px solid #1e293b' : '2px solid transparent', cursor: 'pointer' }} />
+                    style={{ width: 28, height: 28, borderRadius: '50%', background: c, border: color === c ? '3px solid var(--text-strong)' : '2px solid transparent', cursor: 'pointer' }} />
                 ))}
               </div>
             </div>
@@ -159,8 +159,8 @@ export default function Categories() {
                 <div style={{ display: 'flex', gap: 8 }}>
                   {(['Expense', 'Income'] as TransactionType[]).map(t => (
                     <button key={t} type="button" onClick={() => setType(t)}
-                      style={{ flex: 1, padding: 8, border: '2px solid', borderColor: type === t ? '#3b82f6' : '#e2e8f0',
-                        borderRadius: 8, fontWeight: 600, cursor: 'pointer', background: type === t ? '#eff6ff' : 'white', color: type === t ? '#3b82f6' : 'var(--text-muted)' }}>
+                      style={{ flex: 1, padding: 8, border: 'var(--bw) solid', borderColor: type === t ? 'var(--accent)' : 'var(--glass-border)',
+                        borderRadius: 'var(--radius-sm)', fontWeight: 600, cursor: 'pointer', background: type === t ? 'var(--accent-glow)' : 'var(--glass-bg-strong)', color: type === t ? 'var(--accent)' : 'var(--text-muted)' }}>
                       {t === 'Expense' ? 'Chi tiêu' : 'Thu nhập'}
                     </button>
                   ))}
