@@ -10,8 +10,6 @@ const navItems = [
   { to: '/savings', label: 'Tiết kiệm', icon: '🐷' },
 ];
 
-const themeLabel: Record<string, string> = { system: '🖥️ Hệ thống', light: '☀️ Sáng', dark: '🌙 Tối' };
-
 interface Props {
   isOpen: boolean;
   onClose: () => void;
@@ -19,7 +17,7 @@ interface Props {
 
 export default function Sidebar({ isOpen, onClose }: Props) {
   const { fullName, email, logout } = useAuthStore();
-  const { theme, cycleTheme } = useThemeStore();
+  const { skin, mode, setSkin, setMode } = useThemeStore();
   const navigate = useNavigate();
 
   const handleLogout = () => { logout(); navigate('/login'); };
@@ -44,9 +42,16 @@ export default function Sidebar({ isOpen, onClose }: Props) {
       </nav>
 
       <div style={{ padding: '16px 20px', borderTop: '1px solid var(--glass-border)' }}>
-        <button className="theme-toggle" onClick={cycleTheme} title="Đổi giao diện sáng/tối">
-          <span>{themeLabel[theme]}</span>
-        </button>
+        <div className="theme-switch">
+          <div className="seg" role="group" aria-label="Phong cách">
+            <button className={skin === 'manga' ? 'on' : ''} onClick={() => setSkin('manga')}>📖 Manga</button>
+            <button className={skin === 'anime' ? 'on' : ''} onClick={() => setSkin('anime')}>✨ Anime</button>
+          </div>
+          <div className="seg" role="group" aria-label="Sáng tối">
+            <button className={mode === 'light' ? 'on' : ''} onClick={() => setMode('light')}>☀️</button>
+            <button className={mode === 'dark' ? 'on' : ''} onClick={() => setMode('dark')}>🌙</button>
+          </div>
+        </div>
         <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 2 }}>{fullName}</div>
         <div style={{ fontSize: 12, color: 'var(--sidebar-muted)', marginBottom: 12 }}>{email}</div>
         <button onClick={handleLogout} className="glass-btn glass-btn-danger" style={{ fontSize: 13, padding: '6px 14px' }}>
