@@ -436,3 +436,11 @@ p { margin: 0; }
   0%   { transform: translateX(-100%); }
   100% { transform: translateX(100%); }
 }
+
+/* ===== STAT CARD ===== */
+.stat-card { padding: 18px 20px; position: relative; overflow: hidden; }
+:root[data-skin='manga'] .stat-card { border-left: 6px solid var(--role); }
+.stat-tag { font-size: 12px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.6px; }
+.stat-val { font-family: var(--display-font); font-size: 27px; font-weight: 700; margin-top: 8px; color: var(--role); }
+:root[data-skin='anime'] .stat-val { text-shadow: 0 0 18px var(--accent-glow); }
+.stat-rune { position: absolute; right: 12px; top: 10px; font-size: 30px; opacity: 0.16; }

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type CSSProperties } from 'react';
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 import { statisticsService } from '../services/statisticsService';
 import { transactionService } from '../services/transactionService';
@@ -9,13 +9,14 @@ import { useCountUp } from '../hooks/useCountUp';
 
 const fmt = (n: number) => new Intl.NumberFormat('vi-VN').format(n) + 'đ';
 
-function StatCard({ label, value, color, ready }: { label: string; value: number; color: string; ready: boolean }) {
+function StatCard({ label, value, color, rune, ready }: { label: string; value: number; color: string; rune: string; ready: boolean }) {
   const n = useCountUp(ready ? value : 0);
   return (
-    <div className="glass-card interactive" style={{ padding: '20px 22px', borderLeft: `4px solid ${color}` }}>
-      <div style={{ color: 'var(--text-muted)', fontSize: 13, marginBottom: 6 }}>{label}</div>
-      <div style={{ fontSize: 24, fontWeight: 700, color }}>
-        {ready ? new Intl.NumberFormat('vi-VN').format(n) + 'đ' : '...'}
+    <div className="glass-card interactive stat-card" style={{ '--role': color } as CSSProperties}>
+      <div className="stat-rune">{rune}</div>
+      <div className="stat-tag">{label}</div>
+      <div className="stat-val">
+        {ready ? new Intl.NumberFormat('vi-VN').format(n) + 'đ' : '…'}
       </div>
     </div>
   );
@@ -54,13 +55,13 @@ export default function Dashboard() {
 
   return (
     <div>
-      <h2 style={{ margin: '0 0 24px', fontSize: 22 }}>Dashboard</h2>
+      <h2 style={{ margin: '0 0 24px' }}>Dashboard</h2>
 
       <div className="dashboard-cards stagger">
-        <StatCard label="Tổng thu tháng này" value={summary?.totalIncome ?? 0} color="var(--income)" ready={!!summary} />
-        <StatCard label="Tổng chi tháng này" value={summary?.totalExpense ?? 0} color="var(--expense)" ready={!!summary} />
-        <StatCard label="Đã tiết kiệm" value={summary?.totalSaved ?? 0} color="var(--saving)" ready={!!summary} />
-        <StatCard label="Số dư" value={summary?.balance ?? 0} color="var(--balance)" ready={!!summary} />
+        <StatCard label="Tổng thu tháng này" value={summary?.totalIncome ?? 0} color="var(--income)" rune="⚜" ready={!!summary} />
+        <StatCard label="Tổng chi tháng này" value={summary?.totalExpense ?? 0} color="var(--expense)" rune="🜂" ready={!!summary} />
+        <StatCard label="Đã tiết kiệm" value={summary?.totalSaved ?? 0} color="var(--saving)" rune="✦" ready={!!summary} />
+        <StatCard label="Số dư" value={summary?.balance ?? 0} color="var(--balance)" rune="◈" ready={!!summary} />
       </div>
 
       <div className="dashboard-bottom">
@@ -68,11 +69,11 @@ export default function Dashboard() {
           <h3 style={{ margin: '0 0 16px', fontSize: 16 }}>Chi tiêu 7 ngày qua</h3>
           <ResponsiveContainer width="100%" height={200}>
             <LineChart data={chartData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(148,163,184,0.2)" />
+              <CartesianGrid strokeDasharray="3 3" stroke="var(--glass-border)" strokeOpacity={0.25} />
               <XAxis dataKey="label" tick={{ fontSize: 12 }} />
               <YAxis tick={{ fontSize: 12 }} tickFormatter={v => `${(v/1000).toFixed(0)}K`} />
               <Tooltip formatter={(v: any) => fmt(v as number)} />
-              <Line type="monotone" dataKey="chi" stroke="#ef4444" strokeWidth={2} dot={false} />
+              <Line type="monotone" dataKey="chi" stroke="var(--expense)" strokeWidth={2.5} dot={false} />
             </LineChart>
           </ResponsiveContainer>
         </div>
