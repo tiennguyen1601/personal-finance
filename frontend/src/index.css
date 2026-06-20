@@ -1,99 +1,96 @@
 :root {
-  /* Light theme tokens */
-  --text: #4b5563;
-  --text-muted: #94a3b8;
-  --text-strong: #0f172a;
-
-  --accent: #7c3aed;
-  --accent-2: #2563eb;
-  --accent-grad: linear-gradient(135deg, #7c3aed 0%, #2563eb 100%);
-
-  --glass-bg: rgba(255, 255, 255, 0.55);
-  --glass-bg-strong: rgba(255, 255, 255, 0.75);
-  --glass-border: rgba(255, 255, 255, 0.6);
-  --glass-shadow: 0 8px 32px rgba(31, 38, 135, 0.12), 0 2px 8px rgba(31, 38, 135, 0.06);
-  --blur: 18px;
-
-  --income: #16a34a;
-  --expense: #dc2626;
-  --saving: #7c3aed;
-  --balance: #2563eb;
-
   --radius: 18px;
   --radius-sm: 12px;
-
-  --page-bg: #eef1f9;
-  --blob-1: rgba(124, 58, 237, 0.45);
-  --blob-2: rgba(37, 99, 235, 0.40);
-  --blob-3: rgba(236, 72, 153, 0.32);
-
-  --sidebar-bg: rgba(30, 41, 59, 0.72);
-  --sidebar-text: #e2e8f0;
-  --sidebar-muted: #94a3b8;
-
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  font: 16px/1.5 var(--sans);
-  color: var(--text);
+  --blur: 14px;
   color-scheme: light dark;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
 }
 
-/* Dark via explicit toggle */
-:root[data-theme='dark'] {
-  --text: #cbd5e1;
-  --text-muted: #94a3b8;
-  --text-strong: #f1f5f9;
-
-  --accent: #c084fc;
-  --accent-2: #60a5fa;
-  --accent-grad: linear-gradient(135deg, #c084fc 0%, #60a5fa 100%);
-
-  --glass-bg: rgba(30, 32, 48, 0.55);
-  --glass-bg-strong: rgba(30, 32, 48, 0.78);
-  --glass-border: rgba(148, 163, 184, 0.22);
-  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.45), 0 2px 8px rgba(0, 0, 0, 0.30);
-  --blur: 18px;
-
-  --income: #4ade80;
-  --expense: #f87171;
-  --saving: #c084fc;
-  --balance: #60a5fa;
-
-  --page-bg: #0b1020;
-  --blob-1: rgba(124, 58, 237, 0.55);
-  --blob-2: rgba(37, 99, 235, 0.50);
-  --blob-3: rgba(236, 72, 153, 0.38);
-
-  --sidebar-bg: rgba(15, 18, 32, 0.70);
-  --sidebar-text: #e2e8f0;
-  --sidebar-muted: #94a3b8;
+/* ===== CẤU TRÚC THEO SKIN ===== */
+:root[data-skin='manga'] {
+  --radius: 3px;
+  --radius-sm: 2px;
+  --bw: 2.5px;
+  --body-font: 'Be Vietnam Pro', system-ui, sans-serif;
+  --display-font: 'Oswald', 'Be Vietnam Pro', sans-serif;
+  --glow: none;
+}
+:root[data-skin='anime'] {
+  --radius: 20px;
+  --radius-sm: 13px;
+  --bw: 1px;
+  --body-font: 'Be Vietnam Pro', system-ui, sans-serif;
+  --display-font: 'Playfair Display', Georgia, serif;
+  --glow: 0 0 24px var(--accent-glow);
 }
 
-/* Dark via system preference (only when user has NOT chosen explicitly) */
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme]) {
-    --text: #cbd5e1;
-    --text-muted: #94a3b8;
-    --text-strong: #f1f5f9;
-    --accent: #c084fc;
-    --accent-2: #60a5fa;
-    --accent-grad: linear-gradient(135deg, #c084fc 0%, #60a5fa 100%);
-    --glass-bg: rgba(30, 32, 48, 0.55);
-    --glass-bg-strong: rgba(30, 32, 48, 0.78);
-    --glass-border: rgba(148, 163, 184, 0.22);
-    --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.45), 0 2px 8px rgba(0, 0, 0, 0.30);
-    --income: #4ade80;
-    --expense: #f87171;
-    --saving: #c084fc;
-    --balance: #60a5fa;
-    --page-bg: #0b1020;
-    --blob-1: rgba(124, 58, 237, 0.55);
-    --blob-2: rgba(37, 99, 235, 0.50);
-    --blob-3: rgba(236, 72, 153, 0.38);
-    --sidebar-bg: rgba(15, 18, 32, 0.70);
-  }
+/* ===== PALETTE 4 KIỂU ===== */
+/* Manga – Sáng */
+:root[data-skin='manga'][data-mode='light'] {
+  --page-bg: #ece5d4; --page2: #e3dac4;
+  --text: #3a342a; --text-muted: #6b6151; --text-strong: #211d16;
+  --accent: #b3121b; --accent-2: #6d28d9; --accent-glow: transparent;
+  --accent-grad: linear-gradient(135deg, #b3121b 0%, #6d28d9 100%);
+  --arcane: #6d28d9; --ornament: #9a6a07;
+  --income: #1f7a3d; --expense: #b3121b; --saving: #6d28d9; --balance: #9a6a07;
+  --glass-bg: rgba(246,241,228,0.7); --glass-bg-strong: #f6f1e4;
+  --glass-border: #1a1610; --glass-shadow: 4px 4px 0 #1a1610;
+  --surface-shadow: 4px 4px 0 #1a1610;
+  --halftone: rgba(26,22,16,0.14);
+  --sidebar-bg: #f6f1e4; --sidebar-text: #211d16; --sidebar-muted: #6b6151;
+  --blob-1: transparent; --blob-2: transparent; --blob-3: transparent;
+}
+/* Manga – Tối */
+:root[data-skin='manga'][data-mode='dark'] {
+  --page-bg: #08080c; --page2: #0d0d13;
+  --text: #cfc8b5; --text-muted: #8f8775; --text-strong: #ece4cf;
+  --accent: #ef3b3b; --accent-2: #b07cf5; --accent-glow: rgba(239,59,59,0.35);
+  --accent-grad: linear-gradient(135deg, #ef3b3b 0%, #b07cf5 100%);
+  --arcane: #b07cf5; --ornament: #f5c451;
+  --income: #52d27f; --expense: #ff6b6b; --saving: #b07cf5; --balance: #f5c451;
+  --glass-bg: rgba(19,19,27,0.7); --glass-bg-strong: #13131b;
+  --glass-border: #c9bea4; --glass-shadow: 4px 4px 0 #000;
+  --surface-shadow: 4px 4px 0 #000;
+  --halftone: rgba(236,228,207,0.10);
+  --sidebar-bg: #13131b; --sidebar-text: #ece4cf; --sidebar-muted: #8f8775;
+  --blob-1: transparent; --blob-2: transparent; --blob-3: transparent;
+}
+/* Anime – Sáng */
+:root[data-skin='anime'][data-mode='light'] {
+  --page-bg: #ece7f6; --page2: #e6def4;
+  --text: #4a3b78; --text-muted: #6c5b9c; --text-strong: #2c1065;
+  --accent: #7c3aed; --accent-2: #d61f4e; --accent-glow: rgba(124,58,237,0.30);
+  --accent-grad: linear-gradient(135deg, #7c3aed 0%, #d61f4e 100%);
+  --arcane: #7c3aed; --ornament: #c2790a;
+  --income: #0a8a5f; --expense: #d61f4e; --saving: #7c3aed; --balance: #c2790a;
+  --glass-bg: rgba(255,255,255,0.72); --glass-bg-strong: rgba(255,255,255,0.85);
+  --glass-border: rgba(124,58,237,0.22); --glass-shadow: 0 18px 50px rgba(80,40,160,0.18);
+  --surface-shadow: 0 18px 50px rgba(80,40,160,0.18);
+  --halftone: transparent;
+  --sidebar-bg: rgba(255,255,255,0.8); --sidebar-text: #2c1065; --sidebar-muted: #6c5b9c;
+  --blob-1: rgba(124,58,237,0.30); --blob-2: rgba(214,31,78,0.16); --blob-3: rgba(124,58,237,0.16);
+}
+/* Anime – Tối ⭐ */
+:root[data-skin='anime'][data-mode='dark'] {
+  --page-bg: #0a0612; --page2: #120a20;
+  --text: #cfc4e8; --text-muted: #a294c9; --text-strong: #ece7ff;
+  --accent: #a855f7; --accent-2: #fb6f8a; --accent-glow: rgba(168,85,247,0.45);
+  --accent-grad: linear-gradient(135deg, #a855f7 0%, #fb6f8a 100%);
+  --arcane: #c084fc; --ornament: #fbbf24;
+  --income: #34d399; --expense: #fb6f8a; --saving: #c084fc; --balance: #fbbf24;
+  --glass-bg: rgba(32,21,54,0.55); --glass-bg-strong: rgba(32,21,54,0.7);
+  --glass-border: rgba(168,85,247,0.32); --glass-shadow: 0 18px 50px rgba(0,0,0,0.5);
+  --surface-shadow: 0 18px 50px rgba(0,0,0,0.5);
+  --halftone: transparent;
+  --sidebar-bg: rgba(18,10,32,0.7); --sidebar-text: #ece7ff; --sidebar-muted: #a294c9;
+  --blob-1: rgba(168,85,247,0.40); --blob-2: rgba(251,111,138,0.18); --blob-3: rgba(192,132,252,0.16);
+}
+
+body {
+  font: 16px/1.5 var(--body-font);
+  color: var(--text);
 }
 
 #root {
@@ -106,9 +103,10 @@
 
 body {
   margin: 0;
-  background: var(--page-bg);
   color: var(--text);
   min-height: 100vh;
+  background:
+    radial-gradient(120% 80% at 50% 0%, var(--page2) 0%, var(--page-bg) 60%) fixed;
 }
 
 /* ===== RESPONSIVE LAYOUT ===== */
