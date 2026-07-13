@@ -29,7 +29,21 @@
       "Bash(git init *)",
       "Bash(git remote *)",
       "Bash(git branch *)",
-      "Bash(git push *)"
+      "Bash(git push *)",
+      "PowerShell(winget install *)",
+      "Bash(Select-Object -First 5)",
+      "PowerShell(Stop-Process *)",
+      "Bash(git -C D:/BE/web-quan-li-chi-tieu add backend/wwwroot/)",
+      "Bash(git -C D:/BE/web-quan-li-chi-tieu commit -m \"build: production build with savings feature\")",
+      "Bash(git -C D:/BE/web-quan-li-chi-tieu push)",
+      "Bash(ls *.md *.json *.sln)",
+      "Bash(cat vercel.json)",
+      "Bash(npm uninstall *)",
+      "Bash(node -e \"console.log\\(require\\('./node_modules/firebase/package.json'\\).version\\)\")",
+      "Bash(git reset *)",
+      "Bash(npm *)",
+      "Bash(git checkout *)",
+      "Artifact"
     ]
   }
 }

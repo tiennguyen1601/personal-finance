@@ -30,15 +30,12 @@ export default function Dashboard() {
   const { setCategories } = useAppStore();
 
   useEffect(() => {
-    const month = now.getMonth() + 1;
-    const year = now.getFullYear();
-
-    statisticsService.getSummary(month, year).then(setSummary);
-    transactionService.getAll({ month, year }).then(data => setRecent(data.slice(0, 5)));
+    statisticsService.getSummary().then(setSummary);
+    transactionService.getAll({ month: now.getMonth() + 1, year: now.getFullYear() }).then(data => setRecent(data.slice(0, 5)));
     categoryService.getAll().then(setCategories);
 
     // Chart data: expense for last 7 days
-    transactionService.getAll({ month, year, type: 'Expense' }).then(data => {
+    transactionService.getAll({ month: now.getMonth() + 1, year: now.getFullYear(), type: 'Expense' }).then(data => {
       const days: { label: string; chi: number }[] = [];
       for (let i = 6; i >= 0; i--) {
         const d = new Date(now);

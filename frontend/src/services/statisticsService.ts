@@ -6,16 +6,17 @@ import type { Summary, MonthlyData, ByCategoryData } from '../types';
 const sum = (arr: { amount: number }[]) => arr.reduce((s, x) => s + x.amount, 0);
 
 export const statisticsService = {
-  getSummary: async (month: number, year: number): Promise<Summary> => {
+  getSummary: async (): Promise<Summary> => {
     const uid = requireUid();
-    const txs = await transactionService.getAll({ month, year });
+    // Lấy TẤT CẢ giao dịch (không lọc tháng/năm) để tính all-time
+    const txs = await transactionService.getAll({});
     const totalIncome = sum(txs.filter((t) => t.type === 'Income'));
     const totalExpense = sum(txs.filter((t) => t.type === 'Expense'));
 
+    // Lấy TẤT CẢ entries tiết kiệm (all-time) - khớp với trang Savings
     const entriesSnap = await getDocs(collection(db, 'users', uid, 'savingsEntries'));
     const totalSaved = entriesSnap.docs
-      .map((d) => d.data() as { amount: number; date: string })
-      .filter((e) => Number(e.date.slice(0, 4)) === year && Number(e.date.slice(5, 7)) === month)
+      .map((d) => d.data() as { amount: number })
       .reduce((s, e) => s + e.amount, 0);
 
     return {
