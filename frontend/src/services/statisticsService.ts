@@ -27,6 +27,31 @@ export const statisticsService = {
     };
   },
 
+  getSummaryByMonth: async (month: number, year: number): Promise<Summary> => {
+    const uid = requireUid();
+    // Lấy giao dịch của tháng/năm cụ thể
+    const txs = await transactionService.getAll({ month, year });
+    const totalIncome = sum(txs.filter((t) => t.type === 'Income'));
+    const totalExpense = sum(txs.filter((t) => t.type === 'Expense'));
+
+    // Lấy savings entries của tháng/năm cụ thể
+    const entriesSnap = await getDocs(collection(db, 'users', uid, 'savingsEntries'));
+    const totalSaved = entriesSnap.docs
+      .map((d) => d.data() as { amount: number; date: string })
+      .filter((e) => {
+        const d = new Date(e.date);
+        return d.getMonth() + 1 === month && d.getFullYear() === year;
+      })
+      .reduce((s, e) => s + e.amount, 0);
+
+    return {
+      totalIncome,
+      totalExpense,
+      totalSaved,
+      balance: totalIncome - totalExpense - totalSaved,
+    };
+  },
+
   getMonthly: async (year: number): Promise<MonthlyData[]> => {
     const txs = await transactionService.getAll({ year });
     const result: MonthlyData[] = [];

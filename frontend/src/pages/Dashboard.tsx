@@ -24,18 +24,20 @@ function StatCard({ label, value, color, rune, ready }: { label: string; value: 
 
 export default function Dashboard() {
   const now = new Date();
+  const currentMonth = now.getMonth() + 1;
+  const currentYear = now.getFullYear();
   const [summary, setSummary] = useState<Summary | null>(null);
   const [recent, setRecent] = useState<Transaction[]>([]);
   const [chartData, setChartData] = useState<{ label: string; chi: number }[]>([]);
   const { setCategories } = useAppStore();
 
   useEffect(() => {
-    statisticsService.getSummary().then(setSummary);
-    transactionService.getAll({ month: now.getMonth() + 1, year: now.getFullYear() }).then(data => setRecent(data.slice(0, 5)));
+    statisticsService.getSummaryByMonth(currentMonth, currentYear).then(setSummary);
+    transactionService.getAll({ month: currentMonth, year: currentYear }).then(data => setRecent(data.slice(0, 5)));
     categoryService.getAll().then(setCategories);
 
     // Chart data: expense for last 7 days
-    transactionService.getAll({ month: now.getMonth() + 1, year: now.getFullYear(), type: 'Expense' }).then(data => {
+    transactionService.getAll({ month: currentMonth, year: currentYear, type: 'Expense' }).then(data => {
       const days: { label: string; chi: number }[] = [];
       for (let i = 6; i >= 0; i--) {
         const d = new Date(now);
@@ -48,7 +50,7 @@ export default function Dashboard() {
       }
       setChartData(days);
     });
-  }, []);
+  }, [currentMonth, currentYear]);
 
   return (
     <div>
