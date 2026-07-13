@@ -9,6 +9,9 @@ const Transactions = lazy(() => import('./pages/Transactions'));
 const Categories = lazy(() => import('./pages/Categories'));
 const Statistics = lazy(() => import('./pages/Statistics'));
 const Savings = lazy(() => import('./pages/Savings'));
+const Simulator = lazy(() => import('./pages/Simulator'));
+const Anomaly = lazy(() => import('./pages/Anomaly'));
+const Challenges = lazy(() => import('./pages/Challenges'));
 
 function PageFallback() {
   return (
@@ -31,6 +34,9 @@ export default function App() {
             <Route path="/categories" element={<Categories />} />
             <Route path="/statistics" element={<Statistics />} />
             <Route path="/savings" element={<Savings />} />
+            <Route path="/simulator" element={<Simulator />} />
+            <Route path="/anomaly" element={<Anomaly />} />
+            <Route path="/challenges" element={<Challenges />} />
           </Route>
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

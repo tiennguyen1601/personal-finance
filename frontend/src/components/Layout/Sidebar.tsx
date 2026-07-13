@@ -8,6 +8,9 @@ const navItems = [
   { to: '/categories', label: 'Danh mục', icon: '🏷️' },
   { to: '/statistics', label: 'Thống kê', icon: '📈' },
   { to: '/savings', label: 'Tiết kiệm', icon: '🐷' },
+  { to: '/simulator', label: 'Mô phỏng', icon: '🔮' },
+  { to: '/anomaly', label: 'Cảnh báo', icon: '🧠' },
+  { to: '/challenges', label: 'Thử thách', icon: '🎮' },
 ];
 
 interface Props {
